@@ -96,60 +96,6 @@ const setRecipeData = (recipeStorage) => {
   }`;
 };
 
-() => {`
-  <table>
-  <tr>
-    <th>Calories</th>
-    <th>Carbohydrates</th>
-    <th>Fat</th>
-    <th>Fiber</th>
-    <th>Protein</th>
-    <th>Sugar</th>
-  </tr>
-  <tr>
-    <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
-    <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
-    <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
-    <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
-    <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
-    <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
-  </tr>
-</table>
-<h3>Instructions</h3>
-<ul>
-${recipe.instructions.map(instruction => 
-  `
-    <li>${instruction.position}. ${instruction.display_text}</li>
-  `
-)}
-</ul>
-<p>${recipe.description && recipe.description}</p>
-
-<h3>Ingredients</h3>
-<ul>
-  <li>
-  ${recipe.sections[0].components.map(component => (
-    `
-      <div>
-        <h4>${component.ingredient.name}</h4>
-        <p>${component.raw_text}</p>
-        <h4>Measurements</h4>
-        <ul>
-        ${component.measurements.map(measurement => (
-          `
-            <li>${measurement.quantity} ${measurement.unit.name}</li>
-          `
-        ))}
-        </ul>
-      </div>
-    `
-  ))}
-  </li>
-</ul>
-<p>Cook time: ${recipe.total_time_tier.diplay_tier}</p>
-<p>Servings: ${recipe.yields}</p>`
-}
-
 setRecipeData(recipeStorage);
 
 const getMeals = async () => {
@@ -178,8 +124,8 @@ const getMeals = async () => {
   // getMeals();
 
 
-
-
+//code below is for authentication
+//todo -> in progress!
   const form = document.querySelector("form");
   let email = document.querySelector("#email");
   let password = document.querySelector("#password");
