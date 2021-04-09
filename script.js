@@ -17,7 +17,7 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
       //code block
       break;
     default:
-      null;
+      break;
   }
 };
 
@@ -25,28 +25,142 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
 const userStorage = handleLocalStorage("initialize", "users");
 //initialize recipeStorage
 const recipeStorage = handleLocalStorage("initialize", "recipes");
+console.info(recipeStorage)
 //initialize favoriteRecipeStorage
 const favoriteRecipeStorage = handleLocalStorage("initialize", "favoriteRecipes");
 
-const setRecipeData = () => {
+const setRecipeData = (recipeStorage) => {
+  console.info(recipeStorage[0].results[0])
   displayDataContainer.innerHTML = `
   ${recipeStorage[0].results.map(recipe => `
+    <div class="card">
+      <h2>${recipe.name}</h2>
+      <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
+      <h3>Nutrition</h3>
+      <table>
+        <tr>
+          <th>Calories</th>
+          <th>Carbohydrates</th>
+          <th>Fat</th>
+          <th>Fiber</th>
+          <th>Protein</th>
+          <th>Sugar</th>
+        </tr>
+        ${recipe.nutrition && `
+          <tr>
+          <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
+          <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
+          <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
+          <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
+          <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
+          <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
+        </tr>
+        `}
+      </table>
+      <h3>Instructions</h3>
+      <ul>
+      ${recipe.instructions && recipe.instructions.map(instruction => 
+        `
+          <li>${instruction.position}. ${instruction.display_text}</li>
+        `
+      ).join("")}
+      </ul>
+      <p>${recipe.description && recipe.description}</p>
 
-    <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
-    <p>${recipe.name}</p>
+      ${recipe.sections && `
+      <h3>Ingredients</h3>
+      <ul>
+        <li>
+        ${recipe.sections[0].components && recipe.sections[0].components.map(component => (
+          `
+          <div>
+            <h4>${component.ingredient.name}</h4>
+            <p>${component.raw_text}</p>
+            <ul>
+            ${component.measurements.map(measurement => (
+              `
+                <li>${measurement.quantity} ${measurement.unit.name}</li>
+              `
+              ))}
+            </ul>
+          </div>
+            `
+          )).join("")}
+        </li>
+      </ul>
+      `}
+      <p>Cook time: ${recipe.total_time_tier && recipe.total_time_tier.diplay_tier}</p>
+      <p>Servings: ${recipe.yields && recipe.yields}</p>
+    </div>
     `).join("")
   }`;
 };
 
-setRecipeData()
+() => {`
+  <table>
+  <tr>
+    <th>Calories</th>
+    <th>Carbohydrates</th>
+    <th>Fat</th>
+    <th>Fiber</th>
+    <th>Protein</th>
+    <th>Sugar</th>
+  </tr>
+  <tr>
+    <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
+    <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
+    <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
+    <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
+    <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
+    <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
+  </tr>
+</table>
+<h3>Instructions</h3>
+<ul>
+${recipe.instructions.map(instruction => 
+  `
+    <li>${instruction.position}. ${instruction.display_text}</li>
+  `
+)}
+</ul>
+<p>${recipe.description && recipe.description}</p>
+
+<h3>Ingredients</h3>
+<ul>
+  <li>
+  ${recipe.sections[0].components.map(component => (
+    `
+      <div>
+        <h4>${component.ingredient.name}</h4>
+        <p>${component.raw_text}</p>
+        <h4>Measurements</h4>
+        <ul>
+        ${component.measurements.map(measurement => (
+          `
+            <li>${measurement.quantity} ${measurement.unit.name}</li>
+          `
+        ))}
+        </ul>
+      </div>
+    `
+  ))}
+  </li>
+</ul>
+<p>Cook time: ${recipe.total_time_tier.diplay_tier}</p>
+<p>Servings: ${recipe.yields}</p>`
+}
+
+setRecipeData(recipeStorage);
 
 const getMeals = async () => {
-  const url = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=chicken";
+  const url = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=salmon";
+
+  console.log("I am fetching!");
 
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "<your-api-key>",
+      "x-rapidapi-key": "ac72153c36mshd1814c8f1af20f3p1518fbjsnabee85184908",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
@@ -62,7 +176,9 @@ const getMeals = async () => {
   };
 
   // getMeals();
-  console.info(recipeStorage);
+
+
+
 
   const form = document.querySelector("form");
   let email = document.querySelector("#email");
