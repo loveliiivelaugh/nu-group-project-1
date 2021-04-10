@@ -61,3 +61,21 @@
 2. Apply Materialize styling to components.
 
 ## Credits
+
+1. Michael Woodward
+
+2. Karina
+
+3. Angel
+
+## Resources
+
+#### API's
+
+* [Tasty API](https://rapidapi.com/apidojo/api/tasty)
+
+#### GitHub Team Training
+
+* [Reviewing Pull Requests](https://lab.github.com/githubtraining/reviewing-pull-requests)
+
+* [Managing Merge Conflicts](https://lab.github.com/githubtraining/managing-merge-conflicts)
