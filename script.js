@@ -106,7 +106,7 @@ const getMeals = async () => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "ac72153c36mshd1814c8f1af20f3p1518fbjsnabee85184908",
+      "x-rapidapi-key": "<your-api-key>",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
