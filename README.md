@@ -16,9 +16,11 @@
 
 ![Gif 3](/project-prelim3.gif)
 
-
 ## Deployment
 
+* Deployed with [GitHub Pages](https://pages.github.com/)
+
+* [Live Site](https://loveliiivelaugh.github.io/nu-group-project-1/)
 
 ## Instructions
 
@@ -66,7 +68,7 @@
 
 * [Tasty API](https://rapidapi.com/apidojo/api/tasty)
 
-####
+#### Style Library
 
 * [MaterializeCSS](https://materializecss.com/getting-started.html)
 
