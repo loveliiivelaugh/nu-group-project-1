@@ -337,9 +337,3 @@ const handleSubmit = (event) => {
   email.value = '';
   password.value = '';
 };
-
-const handleOnPageLoad = () => {
-  setAuth()
-}
-
-// form.addEventListener("submit", (event) => handleSubmit(event));
