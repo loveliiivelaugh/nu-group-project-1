@@ -159,7 +159,7 @@ const getMeals = async () => {
     });  
   };
 
-  getMeals();
+  // getMeals();
 
 
 
