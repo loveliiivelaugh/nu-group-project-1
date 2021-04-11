@@ -159,7 +159,15 @@ const getMeals = async () => {
     });  
   };
 
+<<<<<<< HEAD
   // getMeals();
+=======
+<<<<<<< HEAD
+    getMeals();
+=======
+  getMeals();
+>>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
+>>>>>>> 21165e75d9b8f593beb5a6cecaccf51abee5f6ed
 
 
 
