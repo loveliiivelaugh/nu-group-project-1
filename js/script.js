@@ -32,7 +32,6 @@ const updateAuth = () => auth = handleLocalStorage("get", "auth");
 
 console.info(recipeStorage, favoriteRecipeStorage, userStorage, auth)
 
-
 const setFavorites = () => {
   if (auth.isUserLoggedIn) {
     favoritesContainer.innerHTML = `
@@ -40,6 +39,7 @@ const setFavorites = () => {
       ${favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === auth.emailLoggedIn)
         .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
+        .join("")
       }
     `;
   }
@@ -48,12 +48,13 @@ const setFavorites = () => {
       ${favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === auth.emailLoggedIn)
         .map(favorite => `<li>${favorite.recipeName}</li>`)
+        .join("")
       }
     `;
   }
 };
 
-// setFavorites();
+setFavorites();
 
 const handleAddToFavorites = event => {
   favoriteRecipeStorage.push({ 
@@ -158,7 +159,11 @@ const getMeals = async () => {
     });  
   };
 
+<<<<<<< HEAD
     getMeals();
+=======
+  getMeals();
+>>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
 
 
 
