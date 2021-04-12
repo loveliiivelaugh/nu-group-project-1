@@ -1,5 +1,7 @@
 const displayDataContainer = document.getElementById("display-data-container");
 const favoritesContainer = document.getElementById("favorites");
+var searchForm = document.getElementById('foodSearchForm');
+var search = document.getElementById('search');
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -137,8 +139,8 @@ const setRecipeData = (recipeStorage) => {
 
 setRecipeData(recipeStorage);
 
-const getMeals = async () => {
-  const url = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=salmon";
+const getMeals = async (query) => {
+  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
 
   console.log("I am fetching!");
 
@@ -151,14 +153,16 @@ const getMeals = async () => {
     })
     .then(response => response.json())
     .then(data => {
-      recipeStorage.push(data);
-      handleLocalStorage("set", "recipes", recipeStorage);
+      // recipeStorage.push(data);
+      // handleLocalStorage("set", "recipes", recipeStorage);
+      setRecipeData(data);
     })
     .catch(err => {
       console.error(err);
     });  
   };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   // getMeals();
 =======
@@ -169,11 +173,21 @@ const getMeals = async () => {
 >>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
 >>>>>>> 21165e75d9b8f593beb5a6cecaccf51abee5f6ed
 
+=======
+    // getMeals();
+searchForm.addEventListener('submit', function(event){
+  event.preventDefault()
+  var searchInput = search.value
+  console.log(searchForm)
+  getMeals(searchInput)
+  searchInput = ''
+})
+>>>>>>> bb20aaee03694d4fd9aeca6e828c6a311dad82d5
 
 
   //AUTHENTICATION
 //code below is for authentication
-const form = document.querySelector("form");
+const form = document.getElementById("authForm");
 const nav = document.getElementById("dynamic-nav");
 
 // ) => {//DATA MODELS
