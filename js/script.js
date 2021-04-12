@@ -1,5 +1,7 @@
 const displayDataContainer = document.getElementById("display-data-container");
 const favoritesContainer = document.getElementById("favorites");
+var searchForm = document.getElementById('foodSearchForm');
+var search = document.getElementById('search');
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -137,8 +139,8 @@ const setRecipeData = (recipeStorage) => {
 
 setRecipeData(recipeStorage);
 
-const getMeals = async () => {
-  const url = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=salmon";
+const getMeals = async (query) => {
+  const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
 
   console.log("I am fetching!");
 
@@ -153,23 +155,26 @@ const getMeals = async () => {
     .then(data => {
       recipeStorage.push(data);
       handleLocalStorage("set", "recipes", recipeStorage);
+      setRecipeData(recipeStorage);
     })
     .catch(err => {
       console.error(err);
     });  
   };
 
-<<<<<<< HEAD
-    getMeals();
-=======
-  getMeals();
->>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
-
+    // getMeals();
+searchForm.addEventListener('submit', function(event){
+  event.preventDefault()
+  var searchInput = search.value
+  console.log(searchForm)
+  getMeals(searchInput)
+  searchInput = ''
+})
 
 
   //AUTHENTICATION
 //code below is for authentication
-const form = document.querySelector("form");
+const form = document.getElementById("authForm");
 const nav = document.getElementById("dynamic-nav");
 
 // ) => {//DATA MODELS
