@@ -8,7 +8,7 @@
 
 ![Pseudo Dashboard](/dashboard-pseudo.jpg)
 
-![Pseudo Landing](/dashboard-pseudo.jpg)
+![Pseudo Landing](/landing-pseudo.jpg)
 ## Demo
 
 ## Deployment
