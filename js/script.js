@@ -1,5 +1,6 @@
 const displayDataContainer = document.getElementById("display-data-container");
 const favoritesContainer = document.getElementById("favorites");
+var searchForm = document.getElementById("foodSearchForm");
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -68,7 +69,7 @@ const handleAddToFavorites = event => {
 };
 
 const setRecipeData = (recipeStorage) => {
-  // console.info(recipeStorage[0].results[0])
+  //console.info(recipeStorage[0].results[0])
   displayDataContainer.innerHTML = `
   ${recipeStorage.length > 0 && recipeStorage[0].results.map(recipe => `
     <div class="card">
@@ -137,8 +138,8 @@ const setRecipeData = (recipeStorage) => {
 
 setRecipeData(recipeStorage);
 
-const getMeals = async () => {
-  const url = "https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=salmon";
+const getMeals = async (query) => {
+  const url = 'https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}';
 
   console.log("I am fetching!");
 
@@ -153,23 +154,24 @@ const getMeals = async () => {
     .then(data => {
       recipeStorage.push(data);
       handleLocalStorage("set", "recipes", recipeStorage);
+      setRecipeData(data);
     })
     .catch(err => {
       console.error(err);
     });  
   };
 
-<<<<<<< HEAD
-    getMeals();
-=======
-  getMeals();
->>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
-
-
-
+    ///getMeals();
+searchForm.addEventListener("submit", function(event){
+  event.preventDefault()
+  var searchInput = search.value
+  console.log(searchForm)
+  getMeals(searchInput)
+  searchInput = ""
+});
   //AUTHENTICATION
 //code below is for authentication
-const form = document.querySelector("form");
+const form = document.getElementById("authform");
 const nav = document.getElementById("dynamic-nav");
 
 // ) => {//DATA MODELS
