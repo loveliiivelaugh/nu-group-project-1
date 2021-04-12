@@ -1,7 +1,9 @@
 const displayDataContainer = document.getElementById("display-data-container");
 const favoritesContainer = document.getElementById("favorites");
 var searchForm = document.getElementById('foodSearchForm');
+var searchFormBtn = document.getElementById('foodSearchFormBtn');
 var search = document.getElementById('search');
+var results = document.getElementById('results');
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -32,7 +34,7 @@ const updateUserStorage = () => userStorage = handleLocalStorage("get", "users")
 let auth = handleLocalStorage("initialize", "auth");
 const updateAuth = () => auth = handleLocalStorage("get", "auth");
 
-console.info(recipeStorage, favoriteRecipeStorage, userStorage, auth)
+// console.info(recipeStorage, favoriteRecipeStorage, userStorage, auth)
 
 const setFavorites = () => {
   if (auth.isUserLoggedIn) {
@@ -56,7 +58,7 @@ const setFavorites = () => {
   }
 };
 
-setFavorites();
+// setFavorites();
 
 const handleAddToFavorites = event => {
   favoriteRecipeStorage.push({ 
@@ -69,10 +71,36 @@ const handleAddToFavorites = event => {
   setFavorites();
 };
 
-const setRecipeData = (recipeStorage) => {
-  // console.info(recipeStorage[0].results[0])
+
+var recipeClickHandler = () => {
+  console.info("I have been clicked!");
+}
+
+const setRecipeResults = data => {
+  results.innerHTML = `
+    <h3>Results list items</h3>
+    <ul>
+    ${
+      data &&
+      data.results.map(recipe => `
+        <button class="link" onclick="recipeClickHandler(event)">
+          <li>
+            <img src="${recipe.image}" alt="recipe thumbnail" thumbnail />
+            <p>${recipe.name}</p>
+            <p>${recipe.description}</p>
+          </li>
+        </button>`)
+      .join("")
+    }
+    </ul>
+  `;
+}
+
+const setRecipeData = (data) => {
+  // console.info(data[0].results[0])
+  console.info(data);
   displayDataContainer.innerHTML = `
-  ${recipeStorage.length > 0 && recipeStorage[0].results.map(recipe => `
+  ${data && data.results.map(recipe => `
     <div class="card">
       <h2>${recipe.name}</h2>
       <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
@@ -137,7 +165,7 @@ const setRecipeData = (recipeStorage) => {
   }`;
 };
 
-setRecipeData(recipeStorage);
+// setRecipeData(recipeStorage);
 
 const getMeals = async (query) => {
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
@@ -156,33 +184,20 @@ const getMeals = async (query) => {
       // recipeStorage.push(data);
       // handleLocalStorage("set", "recipes", recipeStorage);
       setRecipeData(data);
+      setRecipeResults(data)
     })
     .catch(err => {
       console.error(err);
     });  
   };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  // getMeals();
-=======
-<<<<<<< HEAD
-    getMeals();
-=======
-  getMeals();
->>>>>>> fffac656a7b6c93abd53f335871f9cf9bc752864
->>>>>>> 21165e75d9b8f593beb5a6cecaccf51abee5f6ed
-
-=======
     // getMeals();
-searchForm.addEventListener('submit', function(event){
-  event.preventDefault()
-  var searchInput = search.value
-  console.log(searchForm)
-  getMeals(searchInput)
-  searchInput = ''
-})
->>>>>>> bb20aaee03694d4fd9aeca6e828c6a311dad82d5
+searchForm.addEventListener('submit', function(event){ 
+  event.preventDefault();
+  getMeals(search.value);
+  search.value = '';
+});
+
 
 
   //AUTHENTICATION
@@ -282,7 +297,7 @@ loggedInUser = {
   token: null
 };
 
-auth.isUserLoggedIn ? setAuth() && setFavorites() : setAuthForm("signin") && setFavorites();
+// auth.isUserLoggedIn ? setAuth() && setFavorites() : setAuthForm("signin") && setFavorites();
 
 const generateToken = event => "I am a token!";
 
