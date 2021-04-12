@@ -6,8 +6,9 @@
 
 ## Screenshots
 
-![Screenshot 1](/pseudo.pdf)
+![Pseudo Dashboard](/dashboard-pseudo.jpg)
 
+![Pseudo Landing](/dashboard-pseudo.jpg)
 ## Demo
 
 ## Deployment
