@@ -4,6 +4,7 @@ var searchForm = document.getElementById('foodSearchForm');
 var searchFormBtn = document.getElementById('foodSearchFormBtn');
 var search = document.getElementById('search');
 var results = document.getElementById('results');
+var centerSection = document.getElementById('center-section');
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -34,6 +35,8 @@ const updateUserStorage = () => userStorage = handleLocalStorage("get", "users")
 let auth = handleLocalStorage("initialize", "auth");
 const updateAuth = () => auth = handleLocalStorage("get", "auth");
 
+let currentSearchResults = [];
+
 // console.info(recipeStorage, favoriteRecipeStorage, userStorage, auth)
 
 const setFavorites = () => {
@@ -63,7 +66,7 @@ const setFavorites = () => {
 const handleAddToFavorites = event => {
   favoriteRecipeStorage.push({ 
     userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-    recipeName: event.target.dataset.recipe,
+    recipeName: event.target.data.recipe,
   });
   console.info(event.target.dataset.recipe, favoriteRecipeStorage);
   handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
@@ -72,35 +75,57 @@ const handleAddToFavorites = event => {
 };
 
 
-var recipeClickHandler = () => {
-  console.info("I have been clicked!");
-}
+var handleRecipeClick = event => {
+  const index = event.target.dataset.index;
+  console.info("I have been clicked!", event.target.dataset.index);
+  console.info(currentSearchResults.results[index]);
+  let recipe = currentSearchResults.results && currentSearchResults.results[index];
+  recipe ? centerSection.innerHTML =`
+    <div class="card">
+      <div class="card-image">
+        <img src="${recipe.thumbnail_url}" alt="Picture coming soon">
+        <span class="card-title">${recipe.name}</span>
+        <a class="btn-floating halfway-fab waves-effect waves-light red">
+          <i class="material-icons">add</i>
+        </a>
+      </div>
+      <div class="card-content">
+        <p>${recipe.description}</p>
+      </div>
+    </div>
+  ` : '';
+};
 
 const setRecipeResults = data => {
+  console.info(data);
+  currentSearchResults = data;
   results.innerHTML = `
     <h3>Results list items</h3>
     <ul>
     ${
       data &&
-      data.results.map(recipe => `
-        <button class="link" onclick="recipeClickHandler(event)">
-          <li>
-            <img src="${recipe.image}" alt="recipe thumbnail" thumbnail />
-            <p>${recipe.name}</p>
-            <p>${recipe.description}</p>
-          </li>
-        </button>`)
+      data.results.map((recipe, index) => `
+        <li class="collection-item avatar" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
+          <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle" style="max-height: 100px;">
+          <p data-index="${index}">${recipe.name}</p>
+          <p data-index="${index}">${recipe.description}</p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+      `)
       .join("")
     }
     </ul>
   `;
-}
+};
 
 const setRecipeData = (data) => {
   // console.info(data[0].results[0])
-  console.info(data);
-  displayDataContainer.innerHTML = `
-  ${data && data.results.map(recipe => `
+  let index = 0;
+  let results = [];
+  if (data.results) { results = data.results && console.info(data); }
+  if (data.target) { console.info(data.target.dataset.index); }
+  centerSection.innerHTML = `
+  ${results && results.length > 0 && results.slice(index, 1).map(recipe => `
     <div class="card">
       <h2>${recipe.name}</h2>
       <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
@@ -185,6 +210,7 @@ const getMeals = async (query) => {
       // handleLocalStorage("set", "recipes", recipeStorage);
       setRecipeData(data);
       setRecipeResults(data)
+      handleRecipeClick(data);
     })
     .catch(err => {
       console.error(err);
