@@ -29,7 +29,13 @@
 
   - Featuring at least 2 pages, 1 landing, 1 dashboard.
 
-  - Using color scheme --> (currently choosing)
+  - Using color scheme 
+``` 
+  #AED9DA (GRAY), 
+  #3DDAD8 (TURQOISE), 
+  #2A93D5 (BLUE), 
+  #135589 (NAVY)
+```
 
 3. Starting with `index.html` use semantic tags to layout base stucture of app.
 
