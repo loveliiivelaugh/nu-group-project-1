@@ -6,15 +6,9 @@
 
 ## Screenshots
 
-![Screenshot 1](/screenshot1.png)
+![Screenshot 1](/pseudo.pdf)
 
 ## Demo
-
-![Gif 1](/project-prelim1.gif)
-
-![Gif 2](/project-prelim2.gif)
-
-![Gif 3](/project-prelim3.gif)
 
 ## Deployment
 
