@@ -1,3 +1,5 @@
+
+//assign global variables to lik with the DOM elments
 const displayDataContainer = document.getElementById("display-data-container");
 const favoritesContainer = document.getElementById("favorites");
 var searchForm = document.getElementById('foodSearchForm');
@@ -10,11 +12,11 @@ var registerBtn = document.getElementById("register-btn")
 var loginBtn = document.getElementById("login-btn")
 var authPage = document.querySelector(".auth-page");
 
+
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
     case "initialize":
-      return localStorage.getItem(nameOfStorage) ?
-      JSON.parse(localStorage.getItem(nameOfStorage)) : [];
+      return localStorage.getItem(nameOfStorage) ? JSON.parse(localStorage.getItem(nameOfStorage)) : [];
     case "get":
       return JSON.parse(localStorage.getItem(nameOfStorage));
     case "set":
@@ -29,7 +31,6 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
 //initialize recipeStorage
 let recipeStorage = handleLocalStorage("initialize", "recipes");
 const updateRecipeStorage = () => recipeStorage = handleLocalStorage("get", "recipes");
-console.log(recipeStorage)
 //initialize favoriteRecipeStorage
 let favoriteRecipeStorage = handleLocalStorage("initialize", "favoriteRecipes");
 const updateFavoriteRecipeStorage = () => favoriteRecipeStorage = handleLocalStorage("get", "favoriteRecipes");
@@ -43,46 +44,43 @@ const updateAuth = () => auth = handleLocalStorage("get", "auth");
 let cart = handleLocalStorage("initialize", "cart");
 const updateCart = () => cart = handleLocalStorage("get", "cart");
 
+
 let currentSearchResults = [];
 
-// console.info(recipeStorage, favoriteRecipeStorage, userStorage, auth)
-
-const handleAuthButtons = ( ) => {
-
-};
+const handleAuthButtons = ( ) => {};
 
 
 //special switch case function to handle routing and switching the pages.
 const switchPage = (page) => {
   switch (page) {
-    case "toMain":
-      //switch from landing page to main page
-      document.querySelector("#landing-page").style.display = "none";
-      document.getElementById("main-section").style.display = "block";
+    case "toDashboard":
+      //switch from landing page or auth page to dashboard page
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("landing-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
-      //switch from highscores page or endGame page to landing page
-      document.getElementById("end-game-page").style.display = "none";
-      document.querySelector("#highscores-page").style.display = "none";
-      document.querySelector("#landing-page").style.display = "block";
+      //switch from auth page to landing page
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "none";
+      document.getElementById("landing-page").style.display = "block";
       break;
-    case "toHighScores":
-      //switch from main page or endGame page to highscores page
-      document.getElementById("end-game-page").style.display = "none";
-      document.getElementById("main-section").style.display = "none";
-      document.querySelector("#highscores-page").style.display = "block";
-      break;
-    case "toEndGame":
-      //switch from main page to end page
-      document.querySelector("#landing-page").style.display = "none";
-      document.getElementById("main-section").style.display = "none";
-      document.getElementById("end-game-page").style.display = "block";
+    case "toAuth":
+      //switch from dashboard page or landing page to auth page
+      document.getElementById("landing-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "none";
+      document.getElementById("auth-page").style.display = "block";
       break;
     default:
+      //switch from auth page to landing page
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "none";
+      document.getElementById("landing-page").style.display = "block";
       break;
   }
 };
 
+// switchPage("toDashboard");
 
 
 const setFavorites = () => {
@@ -99,15 +97,13 @@ const setFavorites = () => {
   else {
     favoritesContainer.innerHTML = `
       ${favoriteRecipeStorage
-        .filter(favorite => favorite.userEmail === auth.emailLoggedIn)
-        .map(favorite => `<li>${favorite.recipeName}</li>`)
+        .filter(favorite => favorite.userEmail === "default@test.com")
+        .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
         .join("")
       }
     `;
   }
 };
-
-// setFavorites();
 
 const handleAddToFavorites = event => {
   favoriteRecipeStorage.push({ 
@@ -119,6 +115,19 @@ const handleAddToFavorites = event => {
   setFavorites();
 };
 
+function setShoppingList() {
+    groceryList.innerHTML = `
+      <h2>Grocery List</h2>
+      <ul>
+        ${cart.map(item => item.map(item => `
+          <li>
+            ${item.raw_text} <button class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
+          </li>
+        `).join("")).join("")}
+      </ul>
+    `;
+}
+
 function handleAddToShopping(event) {
   const recipeName = event.target.dataset.recipe;
   if ( currentSearchResults.results ) {
@@ -126,12 +135,7 @@ function handleAddToShopping(event) {
         if ( currentSearchResults.results[i].name === recipeName ) {
           cart.push(currentSearchResults.results[i].sections[0].components);
           handleLocalStorage("set", "cart", cart);
-          groceryList.innerHTML = `
-            <h2>Grocery List</h2>
-            <ul>
-              ${cart.map(item => item.map(item => `<li>${item.raw_text}</li>`).join("")).join("")}
-            </ul>
-          `;
+          setShoppingList();
         }
       }
   }
@@ -139,44 +143,43 @@ function handleAddToShopping(event) {
 
 
 var handleRecipeClick = event => {
-  let index = 0
-  if (event)  {
-    index = event.target.dataset.index;
-  }
-  let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
+  console.info(currentSearchResults)
+
+  let recipe = currentSearchResults.results ? 
+  currentSearchResults.results[event.target ? event.target.dataset.index : 0] :
+  recipeStorage[0].results[0];
 
   centerSection.innerHTML =`
     <div class="card">
       <div class="card-image">
         <img src="${recipe.thumbnail_url}" alt="Picture coming soon">
         <span class="card-title">${recipe.name}</span>
-        <a class="btn-floating halfway-fab waves-effect waves-light red">
-          <i class="material-icons">add</i>
-        </a>
       </div>
 
-      <div class="card-content">
-        <p>
-          <span class="material-icons">access_time</span>
-          <span>${recipe.total_time_tier && recipe.total_time_tier.diplay_tier} </span>
-          <span id="servings">${recipe.yields && recipe.yields}</span>
-          <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-          <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
-        </p>
-        <a 
-        class="btn-floating halfway-fab waves-effect waves-light red" 
-        onclick="handleAddToFavorites(event)" 
-        data-recipe="${recipe.name}" 
-        data-id="${1234}"
-        >
-        <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
+      <div class="card-content row">
+        <div className="col s6">
+          <p>
+            <span class="material-icons">access_time</span>
+            <span>${recipe.total_time_tier && recipe.total_time_tier.display_tier} </span>
+          </p>
+          <p>
+            <span id="servings">${recipe.yields && recipe.yields}</span>
+          </p>
         </div>
+        <div className="col s6">
+          <p>
+            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
+            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+          </p>
+        </div>
+      </div>
         
       <div class="card">
         <div class="card-content">
-          <span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
-          <p><a href="#">This is a link</a></p>
+          <span class="card-title activator grey-text text-darken-4">
+            ${recipe.name}<i class="material-icons right">more_vert</i>
+          </span>
+          <p>${recipe.description && recipe.description}<a href="#">This is a link</a></p>
         </div>
         
           <div class="card-content">
@@ -185,11 +188,22 @@ var handleRecipeClick = event => {
                 <li><span class="material-icons">check_circle</span> ${component.raw_text}</li>
               `).join("")}
             </ul>
+            <a class="btn-floating">
+              <i 
+                class="material-icons" 
+                id="cartBtn" 
+                onclick="handleAddToShopping(event)" 
+                data-recipe="${recipe.name}"
+              >shopping_cart</i>
+            </a>
             <a 
-              class="btn-floating" 
-              
-            ><i class="material-icons" id="cartBtn" onclick="handleAddToShopping(event)" 
-            data-recipe="${recipe.name}">shopping_cart</i></a>
+              class="btn-floating waves-effect waves-light red right-align" 
+              onclick="handleAddToFavorites(event)" 
+              data-recipe="${recipe.name}" 
+              data-id="${1234}"
+            >
+              <i class="material-icons" id="favoriteBtn">favorite</i>
+            </a>
           </div>
 
       <div class="card-reveal">
@@ -231,14 +245,14 @@ var handleRecipeClick = event => {
       </div>
 
     </div>
-      
-      <p>${recipe.description && recipe.description}</p>
   `;
+
+  // setShoppingList();
+
 };
 
 const setRecipeResults = data => {
   currentSearchResults = data ? data : recipeStorage[0];
-  console.info(currentSearchResults)
   results.innerHTML = `
     <h3>Results list items</h3>
     <ul>
@@ -248,7 +262,7 @@ const setRecipeResults = data => {
         <li class="collection-item avatar" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
           <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle" style="max-height: 50px;">
           <p data-index="${index}">${recipe.name}</p>
-          <p data-index="${index}">${recipe.description}</p>
+          <p data-index="${index}">${recipe.description ? recipe.description.split(0, 28) : "Sorry, no description"}...</p>
           <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
         </li>
       `)
@@ -258,86 +272,8 @@ const setRecipeResults = data => {
   `;
 };
 
-const setRecipeData = (data) => {
-  let index = 0;
-  let results = [];
-  if (data.results) { results = data.results && console.info(data); }
-  if (data.target) { console.info(data.target.dataset.index); }
-
-  console.log(data)
-  centerSection.innerHTML = `
-  ${results && results.length > 0 && results.slice(index, 1).map(recipe => `
-    <div class="card">
-      <h2>${recipe.name}</h2>
-      <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
-      <button onclick="handleAddToFavorites(event)" data-recipe="${recipe.name}" data-id="${1234}">Add to Favorites</button>
-      <h3>Nutrition</h3>
-      <table>
-        <tr>
-          <th>Calories</th>
-          <th>Carbohydrates</th>
-          <th>Fat</th>
-          <th>Fiber</th>
-          <th>Protein</th>
-          <th>Sugar</th>
-        </tr>
-        ${recipe.nutrition && `
-          <tr>
-          <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
-          <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
-          <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
-          <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
-          <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
-          <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
-        </tr>
-        `}
-      </table>
-      <h3>Instructions</h3>
-      <ul>
-      ${recipe.instructions && recipe.instructions.map(instruction => 
-        `
-          <li>${instruction.position}. ${instruction.display_text}</li>
-        `
-      ).join("")}
-      </ul>
-      <p>${recipe.description && recipe.description}</p>
-
-      ${recipe.sections && `
-      <h3>Ingredients</h3>
-      <ul>
-        <li>
-        ${recipe.sections[0].components && recipe.sections[0].components.map(component => (
-          `
-          <div>
-            <h4>${component.ingredient.name}</h4>
-            <p>${component.raw_text}</p>
-            <ul>
-            ${component.measurements.map(measurement => (
-              `
-                <li>${measurement.quantity} ${measurement.unit.name}</li>
-              `
-              ))}
-            </ul>
-          </div>
-            `
-          )).join("")}
-        </li>
-      </ul>
-      `}
-      <p>Cook time: ${recipe.total_time_tier && recipe.total_time_tier.diplay_tier}</p>
-      <p>Servings: ${recipe.yields && recipe.yields}</p>
-    </div>
-    `).join("")
-  }`;
-};
-
-handleRecipeClick(event);
-setRecipeResults(event)
-
 const getMeals = async (query) => {
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
-
-  console.log("I am fetching!");
 
   await fetch(url, {
     "method": "GET",
@@ -350,22 +286,15 @@ const getMeals = async (query) => {
     .then(data => {
       // recipeStorage.push(data);
       // handleLocalStorage("set", "recipes", recipeStorage);
-      setRecipeData(data);
+      // setRecipeData(data);
       setRecipeResults(data)
       handleRecipeClick(data);
+      setShoppingList();
     })
     .catch(err => {
       console.error(err);
     });  
   };
-
-loginBtn.addEventListener("click", event => { 
-  console.log("Ive been clicked")
-  authPage.style.display = "flex";
-})
-registerBtn.addEventListener("click", event => {
-  authPage.style.display = "flex";
-})
 
 searchForm.addEventListener('submit', function(event){ 
   event.preventDefault();
@@ -401,11 +330,28 @@ const nav = document.getElementById("nav");
   // ]
 // };
 
+const setNav = (type) => {
+  switch (type) {
+    case "signin":
+      nav.innerHTML = `
+        <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Login</button>
+        <button id="register-btn" class="btn" onclick="setAuthForm("register")">Register</button>
+      `;
+      break;
+    case "signout":
+      nav.innerHTML = `
+        <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Logout</button>
+      `;
+      break;
+  }
+}
+
 const handleLogin = event => handleSubmit(event);
 const handleLogout = event => handleSubmit(event);
 const handleRegister = event => handleSubmit(event);
 
 const setAuthForm = (type) => {
+
   switch (type) {
     case "signin":
       authForm.innerHTML = `
@@ -431,6 +377,7 @@ const setAuthForm = (type) => {
     default:
       break;
   }
+  // switchPage("toAuth");
 };
 
 const setAuth = () => {
@@ -474,6 +421,8 @@ loggedInUser = {
 
 auth.isUserLoggedIn ? setAuth() && setFavorites() : setAuthForm("signin") && setFavorites();
 
+getMeals("Pasta");
+
 const generateToken = event => "I am a token!";
 
 const handleSubmit = (event) => {
@@ -509,6 +458,7 @@ const handleSubmit = (event) => {
         token: token
       };
       setAuth();
+      setNav("signout");
       break;
 
     case "signin":
@@ -527,6 +477,7 @@ const handleSubmit = (event) => {
             };
             setAuth();
             setFavorites();
+            setNav("signout");
           }
           else { alert("Please enter a valid email and password."); }
         });
@@ -547,6 +498,7 @@ const handleSubmit = (event) => {
       };
       console.info(loggedInUser, auth);
       setAuth();
+      setNav("signin");
       break;
 
     default:
