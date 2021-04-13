@@ -84,31 +84,45 @@
     </section>
 
     <section class="col s6">
-      <!-- <img src="" alt="">
-      <div></div>
-      <div>
-        <ul></ul>
-      </div>
-      <div>
-        <h2>How to cook it</h2>
-        <p>This recipe was carefully designed and tested by Closet Cooking. Please check out directions at their website.</p>
-        <button>Directions</button>
-      </div> -->
       <div class="card">
         <div class="card-image">
           <img src="./pizza_image.jpeg">
           <span class="card-title">Card Title</span>
-          <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
         </div>
-        <div class="card-content">
-          <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
-        </div>
-      </div>
 
+        <!-- Start of time and servings amount section -->
+        <div class="card-content">
+          <p><span class="material-icons">access_time</span>
+            <span>30 Minutes </span>Servings <span id="servings">0</span>
+            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
+            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+          </p>
+         <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a>
+        </div>
+        <!-- Start of time and servings amount section -->
+
+        <!-- Start of Ingredient section -->
+        <div class="card">
+          <div class="card-image">
+          </div>
+          <div class="card-content">
+            <ul>
+              <li><span class="material-icons">check_circle</span> Store bought pizza crust or refrigerated crust</li>
+              <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
+              <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
+              <li><span class="material-icons">check_circle</span>1 Store bought pizza crust or refrigerated crust</li>
+              <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
+              <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
+            </ul>
+            <a class="btn-floating"><i class="material-icons" id="cartBtn">shopping_cart</i></a>
+          </div>
+        </div>
+        </div>
+        <!-- Start of Ingredient section -->
     </section>
 
-    <section class="col s3">
-      <h2>Grocery List</h2>
+    <section id="shoppingList" class="col s3">
+      <h4>My Shopping List</h4>
       <ul>
         <li>Collard Salad</li>
         <li>Collard Salad</li>
@@ -119,14 +133,8 @@
 
   <div id="display-data-container"></div>
 
-    <!-- <h1>Meal finder</h1>
-    <div>
-      <h3>Favorites!</h3>
-      <ul id="favorites"></ul>
     </div>
-    -->
-
-    </div>
+    </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./js/script.js" async defer></script>
   </body>
