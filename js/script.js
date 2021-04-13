@@ -5,6 +5,7 @@ var searchFormBtn = document.getElementById('foodSearchFormBtn');
 var search = document.getElementById('search');
 var results = document.getElementById('results');
 var centerSection = document.getElementById('center-section');
+var groceryList = document.getElementById("grocery-list");
 
 const handleLocalStorage = (action, nameOfStorage, data) => {
   switch (action) {
@@ -34,6 +35,9 @@ const updateUserStorage = () => userStorage = handleLocalStorage("get", "users")
 //initialize authentication
 let auth = handleLocalStorage("initialize", "auth");
 const updateAuth = () => auth = handleLocalStorage("get", "auth");
+//initialize shopping cart
+let cart = handleLocalStorage("initialize", "cart");
+const updateCart = () => cart = handleLocalStorage("get", "cart");
 
 let currentSearchResults = [];
 
@@ -74,26 +78,113 @@ const handleAddToFavorites = event => {
   setFavorites();
 };
 
+function handleAddToShopping(event) {
+  const recipeName = event.target.dataset.recipe;
+  console.info(recipeName, currentSearchResults)
+  if ( currentSearchResults.results ) {
+      console.info(currentSearchResults.results, recipeName);
+      for ( let i = 0 ; i < currentSearchResults.results.length; i++ ) {
+        console.info(currentSearchResults.results[i].name, recipeName)
+        if ( currentSearchResults.results[i].name === recipeName ) {
+          groceryList.innerHTML = `
+            <h2>Grocery List</h2>
+            <ul>
+              ${currentSearchResults.results[i].sections[0].components
+                .map(item => (
+                  `
+                    <li>
+                      ${console.info(item)}
+                    </li>
+                  `))}
+            </ul>
+          `;
+        }
+      }
+  }
+}
+
 
 var handleRecipeClick = event => {
   const index = event.target.dataset.index;
   console.info("I have been clicked!", event.target.dataset.index);
   console.info(currentSearchResults.results[index]);
   let recipe = currentSearchResults.results && currentSearchResults.results[index];
-  recipe ? centerSection.innerHTML =`
+  centerSection.innerHTML =`
     <div class="card">
       <div class="card-image">
         <img src="${recipe.thumbnail_url}" alt="Picture coming soon">
-        <span class="card-title">${recipe.name}</span>
+        <span class="card-title">Card Title</span>
         <a class="btn-floating halfway-fab waves-effect waves-light red">
           <i class="material-icons">add</i>
         </a>
       </div>
       <div class="card-content">
-        <p>${recipe.description}</p>
+        <p>
+          I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.
+        </p>
       </div>
     </div>
-  ` : '';
+    <div class="card">
+      <h2>${recipe.name}</h2>
+      <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
+      <button onclick="handleAddToFavorites(event)" data-recipe="${recipe.name}" data-id="${1234}">Add to Favorites</button>
+      <h3>Nutrition</h3>
+      <table>
+        <tr>
+          <th>Calories</th>
+          <th>Carbohydrates</th>
+          <th>Fat</th>
+          <th>Fiber</th>
+          <th>Protein</th>
+          <th>Sugar</th>
+        </tr>
+        ${recipe.nutrition && `
+          <tr>
+          <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
+          <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
+          <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
+          <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
+          <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
+          <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
+        </tr>
+        `}
+      </table>
+      <h3>Instructions</h3>
+      <ul>
+      ${recipe.instructions && recipe.instructions.map(instruction => 
+        `
+          <li>${instruction.position}. ${instruction.display_text}</li>
+        `
+      ).join("")}
+      </ul>
+      <p>${recipe.description && recipe.description}</p>
+      <button onclick="handleAddToShopping(event)" data-recipe="${recipe.name}">Add to Shoooping Cart</button>
+
+      ${recipe.sections && `
+      <h3>Ingredients</h3>
+      <ul>
+        <li>
+        ${recipe.sections[0].components && recipe.sections[0].components.map(component => (
+          `
+          <div>
+            <h4>${component.ingredient.name}</h4>
+            <p>${component.raw_text}</p>
+            <ul>
+            ${component.measurements.map(measurement => (
+              `
+                <li>${measurement.quantity} ${measurement.unit.name}</li>
+              `
+              )).join("")}
+            </ul>
+          </div>
+            `
+          )).join("")}
+        </li>
+      </ul>
+      `}
+      <p>Cook time: ${recipe.total_time_tier && recipe.total_time_tier.diplay_tier}</p>
+      <p>Servings: ${recipe.yields && recipe.yields}</p>
+  `;
 };
 
 const setRecipeResults = data => {
