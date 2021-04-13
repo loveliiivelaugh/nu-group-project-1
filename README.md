@@ -6,15 +6,10 @@
 
 ## Screenshots
 
-![Screenshot 1](/screenshot1.png)
+![Pseudo Dashboard](/dashboard-pseudo.jpg)
 
+![Pseudo Landing](/landing-pseudo.jpg)
 ## Demo
-
-![Gif 1](/project-prelim1.gif)
-
-![Gif 2](/project-prelim2.gif)
-
-![Gif 3](/project-prelim3.gif)
 
 ## Deployment
 
@@ -24,20 +19,28 @@
 
 ## Instructions
 
-1. Go to your `/section-07/project` folder and run this command
-`git clone https://github.com/loveliiivelaugh/nu-group-project-1.git`
+1. Start project and layout folder structure.
 
-2. Open the project in VScode.
+2. Planning our concept and gathering our requirements.
 
-3. On line 161. Uncomment `getMeals()`.
+  - Building a recipe search app.
 
-4. Save. Then comment it out again. Save again. Refresh your browser page.
+  - Using Materialize w/grid layout for styling library
 
-*I have this set up this way so that you can save the returned recipe results in your local storage instead of continually make calls to your API, which can cost money or impose restrictions*
+  - Featuring at least 2 pages, 1 landing, 1 dashboard.
 
-5. Once your page refreshes you should see the recipe data populate to the page. From here you can easily see all the data the API is returning.
+  - Using color scheme 
+``` 
+  #AED9DA (GRAY), 
+  #3DDAD8 (TURQOISE), 
+  #2A93D5 (BLUE), 
+  #135589 (NAVY)
+```
 
-6. Looking in `/script.js`. There is already a lot of pre written code. From line 165 and beyond is all code that has to do with the authentication flow.
+3. Starting with `index.html` use semantic tags to layout base stucture of app.
+
+4. Basically need a header then a main with 3 columns --> 3-col, 6-col, 3-col
+
 
 ## Todo's
 ### JavaScript
@@ -80,8 +83,8 @@
 
 ## Credits
 
-1. Michael Woodward
+1. Michael Woodward - working on my own branch
 
 2. Karina
 
-3. Angel
+3. Angel - github test

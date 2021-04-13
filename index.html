@@ -11,94 +11,174 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!--Let browser know website is optimized for mobile-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="style.css">
   </head>
+
   <style>
     #meal-image {
       max-height: 150px;
     }
-  </style>
-  <body>
-    <!--Start of landing page-->
-    <div class="container">
-    <nav>
-      <div class="nav-wrapper">
-        <a href="#" class="brand-logo right">Account</a>
-      </div>
-    </nav>
-    <!---jumbotron-->
-    <div class="row">
-      <div class="col s12 m15">
-        <div class="card">
-          <div class="card-image">
-            <img src="logo.png">
-            <span class="card-title"></span>
-          </div>
-          <div class="card-content">
-            <p>Come Get Your Next Dinner Idea Here!</p>
-          </div>
-          <div class="card-action">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-<!--icons-->
-      <div class="col s4">
-        <!-- Promo Content 1 goes here -->
-        <p>test</p>
-      </div>
-      <div class="col s4">
-        <!-- Promo Content 2 goes here -->
-      </div>
-      <div class="col s4">
-        <!-- Promo Content 3 goes here -->
-      </div>
-      <div class="col s4">
-        <!--Promo Content 4 goes here-->
-      </div>
-      <!--rows-->
-     <div class="container">
-       <div class="row">
-         <div class="col s8">
-         <h4></h4>
-         <p></p>
-         </div>
-         <div class="col s4">
-         <img src=""></div>
-       </div>
-       <div class="row">
-         <div class="col-4">
-         <img src="">
-         </div>
-         <div class="col-8">
-           <h4></h4>
-           <p></p>
-         </div>
-       </div>
-       <footer class="page-footer">
-       </footer>
-    
-      </div>
-      </div>
-    
-    <nav id="dynamic-nav"></nav>
 
-    <h1>Meal finder</h1>
-    <form id="authForm"></form> 
-    <form id="foodSearchForm">
-      <input id="search" type="text" name="foodItem" placeholder="Search for recipes here">
-  
-      <button type="submit">Login</button>
-    </form>
+    .auth-page {
+      height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: none;
+      margin: auto;
+    }
+  </style>
+
+  <body>
+
+  <div class="container">
+
+
+    <div class="auth-page">
+      <nav id="nav">
+        <form id="authForm" class="form"></form> 
+      </nav>
+    </div>
 
     <div>
-      <h3>Favorites!</h3>
-      <ul id="favorites"></ul>
+      <nav id="nav" class="right-align">
+        <button id="login-btn" class="btn">Login</button>
+        <button id="register-btn" class="btn">Register</button>
+      </nav>
     </div>
 
-    <div id="display-data-container"></div>
+  <header>
+    <div>
+      <form id="foodSearchForm">
+        <div class="input-field">
+          <input id="search" name="foodItem" type="search" required>
+          <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+          <i class="material-icons">close</i>
+        </div>
+        <button id="foodSearchFormBtn" class="btn right" type="submit">Search</button>
+      </form>
+    </div>
+
+  </header>
+
+  <div class="row">
+    <section id="results" class="col s3">
+      <h2>Grocery List</h2>
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <img src="images/yuna.jpg" alt="" class="circle">
+          <span class="title">Pizza</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">folder</i>
+          <span class="title">Pasta</span>
+          <p>Under 30 Min<br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle green">insert_chart</i>
+          <span class="title">Chicken</span>
+          <p>Under 30 Min <br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle red">play_arrow</i>
+          <span class="title">Salad</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+      </ul>
+    </section>
+
+    <section id="center-section" class="col s6">
+      <div class="card">
+        <div class="card-image">
+          <img src="./pizza_image.jpeg">
+          <span class="card-title">Card Title</span>
+        </div>
+
+        <!-- Start of time and servings amount section -->
+        <div class="card-content">
+          <p><span class="material-icons">access_time</span>
+            <span>30 Minutes </span>Servings <span id="servings">0</span>
+            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
+            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+          </p>
+        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a>
+        </div>
+        <!-- Start of time and servings amount section -->
+
+        <!-- Start of Ingredient section -->
+        <div class="card">
+          <div class="card-image">
+          </div>
+          <div class="card-content">
+            <ul>
+              <li><span class="material-icons">check_circle</span> Store bought pizza crust or refrigerated crust</li>
+              <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
+              <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
+              <li><span class="material-icons">check_circle</span>1 Store bought pizza crust or refrigerated crust</li>
+              <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
+              <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
+            </ul>
+            <a class="btn-floating"><i class="material-icons" id="cartBtn">shopping_cart</i></a>
+          </div>
+        </div>
+        </div>
+        <!-- Start of Ingredient section -->
+    </section>
+
+    <section id="grocery-list" class="col s3">
+      <h2>Grocery List</h2>
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <img src="images/yuna.jpg" alt="" class="circle">
+          <span class="title">Pizza</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">folder</i>
+          <span class="title">Pasta</span>
+          <p>Under 30 Min<br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle green">insert_chart</i>
+          <span class="title">Chicken</span>
+          <p>Under 30 Min <br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle red">play_arrow</i>
+          <span class="title">Salad</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <div id="display-data-container"></div>
+
+    </div>
+    </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./js/script.js" async defer></script>
   </body>
