@@ -14,26 +14,49 @@
   
     <link rel="stylesheet" href="">
   </head>
+
   <style>
     #meal-image {
       max-height: 150px;
     }
-  </style>
-  <body>
-<div class="container">
-    <!-- <nav id="dynamic-nav">
-      <form id="authForm"></form> 
-    </nav> -->
 
-  <header class="center">
-    <div class="nav-wrapper">
+    .auth-page {
+      height: 100vh;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: none;
+      margin: auto;
+    }
+  </style>
+
+  <body>
+
+  <div class="container">
+
+
+    <div class="auth-page">
+      <nav id="nav">
+        <form id="authForm" class="form"></form> 
+      </nav>
+    </div>
+
+    <div>
+      <nav id="nav" class="right-align">
+        <button id="login-btn" class="btn">Login</button>
+        <button id="register-btn" class="btn">Register</button>
+      </nav>
+    </div>
+
+  <header>
+    <div>
       <form id="foodSearchForm">
         <div class="input-field">
           <input id="search" name="foodItem" type="search" required>
           <label class="label-icon" for="search"><i class="material-icons">search</i></label>
           <i class="material-icons">close</i>
         </div>
-        <button id="foodSearchFormBtn" class="btn" type="submit">Search</button>
+        <button id="foodSearchFormBtn" class="btn right" type="submit">Search</button>
       </form>
     </div>
 
@@ -42,48 +65,41 @@
   <div class="row">
     <section id="results" class="col s3">
       <h2>Grocery List</h2>
-      <ul>
-        <!-- <li>Collard Salad</li>
-        <li>Collard Salad</li>
-        <li>Collard Salad</li> -->
-        <ul class="collection">
-          <li class="collection-item avatar">
-            <img src="images/yuna.jpg" alt="" class="circle">
-            <span class="title">Pizza</span>
-            <p>Under 30 Min <br>
-               
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
-          <li class="collection-item avatar">
-            <i class="material-icons circle">folder</i>
-            <span class="title">Pasta</span>
-            <p>Under 30 Min<br>
-              
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
-          <li class="collection-item avatar">
-            <i class="material-icons circle green">insert_chart</i>
-            <span class="title">Chicken</span>
-            <p>Under 30 Min <br>
-              
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
-          <li class="collection-item avatar">
-            <i class="material-icons circle red">play_arrow</i>
-            <span class="title">Salad</span>
-            <p>Under 30 Min <br>
-               
-            </p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
-        </ul>
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <img src="images/yuna.jpg" alt="" class="circle">
+          <span class="title">Pizza</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">folder</i>
+          <span class="title">Pasta</span>
+          <p>Under 30 Min<br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle green">insert_chart</i>
+          <span class="title">Chicken</span>
+          <p>Under 30 Min <br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle red">play_arrow</i>
+          <span class="title">Salad</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
       </ul>
     </section>
 
-    <section class="col s6">
+    <section id="center-section" class="col s6">
       <div class="card">
         <div class="card-image">
           <img src="./pizza_image.jpeg">
@@ -97,7 +113,7 @@
             <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
             <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
           </p>
-         <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a>
+        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a>
         </div>
         <!-- Start of time and servings amount section -->
 
@@ -121,12 +137,39 @@
         <!-- Start of Ingredient section -->
     </section>
 
-    <section id="shoppingList" class="col s3">
-      <h4>My Shopping List</h4>
-      <ul>
-        <li>Collard Salad</li>
-        <li>Collard Salad</li>
-        <li>Collard Salad</li>
+    <section id="grocery-list" class="col s3">
+      <h2>Grocery List</h2>
+      <ul class="collection">
+        <li class="collection-item avatar">
+          <img src="images/yuna.jpg" alt="" class="circle">
+          <span class="title">Pizza</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle">folder</i>
+          <span class="title">Pasta</span>
+          <p>Under 30 Min<br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle green">insert_chart</i>
+          <span class="title">Chicken</span>
+          <p>Under 30 Min <br>
+            
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
+        <li class="collection-item avatar">
+          <i class="material-icons circle red">play_arrow</i>
+          <span class="title">Salad</span>
+          <p>Under 30 Min <br>
+          </p>
+          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        </li>
       </ul>
     </section>
   </div>
