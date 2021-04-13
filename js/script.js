@@ -81,7 +81,7 @@ const switchPage = (page) => {
     default:
       break;
   }
-}
+};
 
 
 
@@ -139,8 +139,12 @@ function handleAddToShopping(event) {
 
 
 var handleRecipeClick = event => {
-  const index = event.target.dataset.index;
-  let recipe = currentSearchResults.results && currentSearchResults.results[index];
+  let index = 0
+  if (event)  {
+    index = event.target.dataset.index;
+  }
+  let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
+
   centerSection.innerHTML =`
     <div class="card">
       <div class="card-image">
@@ -152,24 +156,29 @@ var handleRecipeClick = event => {
       </div>
 
       <div class="card-content">
-          <p><span class="material-icons">access_time</span>
-            <span>${recipe.total_time_tier && recipe.total_time_tier.diplay_tier} </span>
-            <span id="servings">${recipe.yields && recipe.yields}</span>
-            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
-          </p>
+        <p>
+          <span class="material-icons">access_time</span>
+          <span>${recipe.total_time_tier && recipe.total_time_tier.diplay_tier} </span>
+          <span id="servings">${recipe.yields && recipe.yields}</span>
+          <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
+          <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+        </p>
         <a 
-          class="btn-floating halfway-fab waves-effect waves-light red" 
-          onclick="handleAddToFavorites(event)" 
-          data-recipe="${recipe.name}" 
-          data-id="${1234}"
+        class="btn-floating halfway-fab waves-effect waves-light red" 
+        onclick="handleAddToFavorites(event)" 
+        data-recipe="${recipe.name}" 
+        data-id="${1234}"
         >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
+        <i class="material-icons" id="favoriteBtn">favorite</i>
         </a>
-      </div>
-
+        </div>
+        
       <div class="card">
-        <div class="card-image"></div>
+        <div class="card-content">
+          <span class="card-title activator grey-text text-darken-4">Card Title<i class="material-icons right">more_vert</i></span>
+          <p><a href="#">This is a link</a></p>
+        </div>
+        
           <div class="card-content">
             <ul>
               ${recipe.sections[0].components && recipe.sections[0].components.map(component => `
@@ -182,49 +191,60 @@ var handleRecipeClick = event => {
             ><i class="material-icons" id="cartBtn" onclick="handleAddToShopping(event)" 
             data-recipe="${recipe.name}">shopping_cart</i></a>
           </div>
+
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+        <h3>Nutrition</h3>
+        <table>
+          <tr>
+            <th>Calories</th>
+            <th>Carbohydrates</th>
+            <th>Fat</th>
+            <th>Fiber</th>
+            <th>Protein</th>
+            <th>Sugar</th>
+          </tr>
+          ${recipe.nutrition && `
+            <tr>
+            <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
+            <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
+            <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
+            <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
+            <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
+            <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
+          </tr>
+          `}
+        </table>
+        <div>
+          <h3>Instructions</h3>
+          <ul>
+          ${recipe.instructions && 
+            recipe.instructions.map(instruction => 
+            `<li>${instruction.position}. ${instruction.display_text}</li>`
+            )
+            .join("")}
+          </ul>
         </div>
       </div>
+
+      </div>
+      </div>
+
     </div>
-      <h3>Nutrition</h3>
-      <table>
-        <tr>
-          <th>Calories</th>
-          <th>Carbohydrates</th>
-          <th>Fat</th>
-          <th>Fiber</th>
-          <th>Protein</th>
-          <th>Sugar</th>
-        </tr>
-        ${recipe.nutrition && `
-          <tr>
-          <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
-          <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
-          <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
-          <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
-          <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
-          <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
-        </tr>
-        `}
-      </table>
-      <h3>Instructions</h3>
-      <ul>
-      ${recipe.instructions && recipe.instructions.map(instruction => 
-        `<li>${instruction.position}. ${instruction.display_text}</li>`
-        )
-        .join("")}
-      </ul>
+      
       <p>${recipe.description && recipe.description}</p>
   `;
 };
 
 const setRecipeResults = data => {
-  currentSearchResults = data;
+  currentSearchResults = data ? data : recipeStorage[0];
+  console.info(currentSearchResults)
   results.innerHTML = `
     <h3>Results list items</h3>
     <ul>
     ${
-      data &&
-      data.results.map((recipe, index) => `
+      currentSearchResults &&
+      currentSearchResults.results.map((recipe, index) => `
         <li class="collection-item avatar" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
           <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle" style="max-height: 50px;">
           <p data-index="${index}">${recipe.name}</p>
@@ -311,7 +331,8 @@ const setRecipeData = (data) => {
   }`;
 };
 
-setRecipeData(recipeStorage[0]);
+handleRecipeClick(event);
+setRecipeResults(event)
 
 const getMeals = async (query) => {
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
