@@ -104,34 +104,34 @@ const switchPage = page => {
     case "toDashboard":
       showUpdatedStorages();
       //switch from landing page or auth page to dashboard page
-      document.getElementById("auth-page").style.display = "block";
-      document.getElementById("landing-page").style.display = "block";
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("landing-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
       showUpdatedStorages();
       //switch from auth page to landing page
-      document.getElementById("auth-page").style.display = "block";
-      document.getElementById("dashboard-page").style.display = "block";
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "none";
       document.getElementById("landing-page").style.display = "block";
       break;
     case "toAuth":
       showUpdatedStorages();
       //switch from dashboard page or landing page to auth page
       if (auth.isUserLoggedIn) { //if we are logged in route to dashboard
-        document.getElementById("landing-page").style.display = "block";
-        document.getElementById("dashboard-page").style.display = "block";
+        document.getElementById("landing-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "none";
         document.getElementById("auth-page").style.display = "block";
       } else {
-        document.getElementById("landing-page").style.display = "block";
-        document.getElementById("dashboard-page").style.display = "block";
+        document.getElementById("landing-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "none";
         document.getElementById("auth-page").style.display = "block";
       }
       break;
     default:
       //switch from auth page to landing page
-      document.getElementById("auth-page").style.display = "block";
-      document.getElementById("dashboard-page").style.display = "block";
+      document.getElementById("auth-page").style.display = "none";
+      document.getElementById("dashboard-page").style.display = "none";
       document.getElementById("landing-page").style.display = "block";
       break;
   }
@@ -142,7 +142,7 @@ const setFavorites = () => {
   //if user is logged in
   if (auth.isUserLoggedIn) {
     //set the favorites container
-    favoritesContainer.innerHTML = `
+    groceryList.innerHTML = `
       <h3>${auth.emailLoggedIn}'s Favorite Recipe's</h3>
       ${//check the favoriteRecipeStorage local storage instance
         favoriteRecipeStorage //filter it by checking if the email from the favorited item matched the email of the user logged in.
@@ -155,7 +155,7 @@ const setFavorites = () => {
   else {
     //if the above condition is not true then run this code block that just does the same thing but checks for 
     //a matching house email account.
-    favoritesContainer.innerHTML = `
+    groceryList.innerHTML = `
       ${favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
         .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
@@ -187,10 +187,11 @@ function deleteShoppingItem(event) { console.info(event.target.dataset.index, ca
 //handleAddToFavorites() function handles adding a seleted item to the favorites list.
 const handleAddToFavorites = event => {
   //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+  console.log(event.target.dataset.recipe)
   favoriteRecipeStorage.push({ 
     //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
     userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-    recipeName: event.target.data.recipe,
+    recipeName: event.target.dataset.recipe,
   });
   //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
   handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
@@ -211,12 +212,6 @@ function handleClearShoppingList(event) {
 //function that sets the groceryList items in the DOM using the updated cart storage array.
 function setShoppingList() {
     groceryList.innerHTML = `
-      <div class="card-tabs">
-        <ul class="tabs tabs-fixed-width">
-          <li class="tab"><a href="#test4">Grocery List</a></li>
-          <li class="tab"><a class="active" href="#test5">Favorite Recipe's</a></li>
-        </ul>
-      </div>
       <h2>Grocery List</h2>
       <ul>
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
@@ -251,6 +246,7 @@ function handleAddToShopping(event) {
       }
   }
 }
+console.info(currentSearchResults, recipeStorage[0])
 
 //function that handles when a recipe item returned from the API is clicked.
 var handleRecipeClick = event => {
@@ -259,7 +255,7 @@ var handleRecipeClick = event => {
   let recipe = currentSearchResults.results ? // ... index of if the recipeClick event is there then set it to the dataset index
   currentSearchResults.results[event.target ? event.target.dataset.index : 0] : //otherwise set it to 0.
   recipeStorage[0].results[0];//if there is no data in the currentSearchResults array then set the selected recipe to the first item in the recipeStorage local storae instance.
-
+  
   //if isLoading is true then set the spinner in the DOM.
   // todo -> need to finish this and wrap in own function to be called here.
   if (true) {
@@ -329,11 +325,10 @@ var handleRecipeClick = event => {
             </a>
             <a 
               class="btn-floating waves-effect waves-light red right-align" 
-              onclick="handleAddToFavorites(event)" 
-              data-recipe="${recipe.name}" 
+              onclick="handleAddToFavorites(event)"  
               data-id="${1234}"
             >
-              <i class="material-icons" id="favoriteBtn">favorite</i>
+              <i class="material-icons" id="favoriteBtn" data-recipe="${recipe.name}">favorite</i>
             </a>
           </div>
 
@@ -488,15 +483,18 @@ const getMeals = async (query) => {
     "method": "GET",
     "headers": {
       "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      // "x-rapidapi-key": "",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
     .then(response => response.json()) //convert the promised response to a json object.
     .then(data => { //now we have access to the json data object
       //setRecipeResults in the DOM with the new data.
-      setRecipeResults(data);
+      // recipeStorage.push(data);
+      // handleLocalStorage("set", "recipes", recipeStorage);
+      setRecipeResults(recipeStorage[0]);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
-      handleRecipeClick(data);
+      handleRecipeClick(recipeStorage[0]);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
       setAuth();
