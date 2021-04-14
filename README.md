@@ -6,9 +6,9 @@
 
 ## Screenshots
 
-![Pseudo Dashboard](/dashboard-pseudo.jpg)
+![Pseudo Dashboard](/assets/images/dashboard-pseudo.jpg)
 
-![Pseudo Landing](/landing-pseudo.jpg)
+![Pseudo Landing](/assets/images//landing-pseudo.jpg)
 ## Demo
 
 ## Deployment
