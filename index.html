@@ -40,20 +40,34 @@
 
     #results ul {
       overflow-y: scroll;
-      max-height: 80vh;
+      max-height: 100vh;
     }
 
     #grocery-list ul {
       overflow-y: scroll;
-      max-height: 80vh;
+      max-height: 90vh;
+    }
+
+    #nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
     }
 
   </style>
 
   <body>
+
+    <div>
+      <nav id="nav" class="right-align light-blue lighten-4">
+        <!-- <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
+        <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Logout</button> -->
+      </nav>
+    </div>
       <!--Start of landing page-->
     <div id="landing-page" class="container">
-        <nav id="nav" class="right-align">
+        <nav class="right-align">
           <div class="nav-wrapper">
             <a href="#" class="brand-logo right">Account</a>
           </div>
@@ -135,9 +149,6 @@
         <!-- Start of Dashboard Page -->
         <div id="dashboard-page" class="container">    
           <header>
-            <nav id="nav" class="right-align light-blue lighten-4">
-              <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Logout</button>
-            </nav>
             <div>
               <form id="foodSearchForm">
                 <div class="input-field">
@@ -188,7 +199,7 @@
 
       <section id="center-section" class="col s6">
 
-        
+
         <div class="preloader-wrapper big active">
           <div class="spinner-layer spinner-blue">
             <div class="circle-clipper left">
