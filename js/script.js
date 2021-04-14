@@ -267,6 +267,8 @@ var handleRecipeClick = event => {
     </div>
     `;
   }
+  let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
+console.log(recipe)
     
   //when it is loaded set the innerHTML of the center section with the updated searched recipe data.
   centerSection.innerHTML =`
@@ -391,6 +393,82 @@ const setRecipeResults = data => {
     </ul>
   `;
 };
+
+const setRecipeData = (data) => {
+  let index = 0;
+  let results = [];
+  if (data.results) { results = data.results && console.info(data); }
+  if (data.target) { console.info(data.target.dataset.index); }
+
+  console.log(data)
+  centerSection.innerHTML = `
+  ${results && results.length > 0 && results.slice(index, 1).map(recipe => `
+    <div class="card">
+      <h2>${recipe.name}</h2>
+      <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
+      <button onclick="handleAddToFavorites(event)" data-recipe="${recipe.name}" data-id="${1234}">Add to Favorites</button>
+      <h3>Nutrition</h3>
+      <table>
+        <tr>
+          <th>Calories</th>
+          <th>Carbohydrates</th>
+          <th>Fat</th>
+          <th>Fiber</th>
+          <th>Protein</th>
+          <th>Sugar</th>
+        </tr>
+        ${recipe.nutrition && `
+          <tr>
+          <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
+          <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
+          <td>${recipe.nutrition.fat ? recipe.nutrition.fat : ''}</td>
+          <td>${recipe.nutrition.fiber ? recipe.nutrition.fiber : ''}</td>
+          <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
+          <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
+        </tr>
+        `}
+      </table>
+      <h3>Instructions</h3>
+      <ul>
+      ${recipe.instructions && recipe.instructions.map(instruction => 
+        `
+          <li>${instruction.position}. ${instruction.display_text}</li>
+        `
+      ).join("")}
+      </ul>
+      <p>${recipe.description && recipe.description}</p>
+
+      ${recipe.sections && `
+      <h3>Ingredients</h3>
+      <ul>
+        <li>
+        ${recipe.sections[0].components && recipe.sections[0].components.map(component => (
+          `
+          <div>
+            <h4>${component.ingredient.name}</h4>
+            <p>${component.raw_text}</p>
+            <ul>
+            ${component.measurements.map(measurement => (
+              `
+                <li>${measurement.quantity} ${measurement.unit.name}</li>
+              `
+              ))}
+            </ul>
+          </div>
+            `
+          )).join("")}
+        </li>
+      </ul>
+      `}
+      <p>Cook time: ${recipe.total_time_tier && recipe.total_time_tier.diplay_tier}</p>
+      <p>Servings: ${recipe.yields && recipe.yields}</p>
+    </div>
+    `).join("")
+  }`;
+};
+
+// handleRecipeClick(event);
+// setRecipeResults(event)
 
 //getMeals() function handles fetching the meal data from the API.
 const getMeals = async (query) => {
