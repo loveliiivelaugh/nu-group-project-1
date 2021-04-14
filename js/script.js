@@ -22,7 +22,8 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
     case "set":
       return localStorage.setItem(nameOfStorage, JSON.stringify(data));
     case "clear":
-      return localStorage.setItem(nameOfStorage);
+      console.log("I am clearing ", nameOfStorage)
+      return localStorage.clear(nameOfStorage);
     default:
       break;
   }
@@ -46,6 +47,7 @@ const updateCart = () => cart = handleLocalStorage("get", "cart");
 
 
 let currentSearchResults = [];
+let setLoading = false;
 
 const handleAuthButtons = ( ) => {};
 
@@ -67,9 +69,15 @@ const switchPage = (page) => {
       break;
     case "toAuth":
       //switch from dashboard page or landing page to auth page
-      document.getElementById("landing-page").style.display = "none";
-      document.getElementById("dashboard-page").style.display = "none";
-      document.getElementById("auth-page").style.display = "block";
+      if (auth.isUserLoggedIn) {
+        document.getElementById("landing-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "block";
+        document.getElementById("auth-page").style.display = "none";
+      } else {
+        document.getElementById("landing-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "none";
+        document.getElementById("auth-page").style.display = "block";
+      }
       break;
     default:
       //switch from auth page to landing page
@@ -105,6 +113,23 @@ const setFavorites = () => {
   }
 };
 
+const toggleGroceryList = (toggle) => {
+    switch (toggle) {
+      case "groceries":
+        setShoppingList();
+        break;
+      case "favorites":
+        setFavorites();
+        break;
+      default:
+        break;
+    }
+}
+
+function deleteShoppingItem(event) {
+  console.info(event.target.dataset.index, cart);
+}
+
 const handleAddToFavorites = event => {
   favoriteRecipeStorage.push({ 
     userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
@@ -115,16 +140,28 @@ const handleAddToFavorites = event => {
   setFavorites();
 };
 
+function handleClearShoppingList(event) {
+  handleLocalStorage("clear", "cart");
+  setShoppingList();
+}
+
 function setShoppingList() {
     groceryList.innerHTML = `
+      <div class="card-tabs">
+        <ul class="tabs tabs-fixed-width">
+          <li class="tab"><a href="#test4">Grocery List</a></li>
+          <li class="tab"><a class="active" href="#test5">Favorite Recipe's</a></li>
+        </ul>
+      </div>
       <h2>Grocery List</h2>
       <ul>
-        ${cart.map(item => item.map(item => `
+        ${cart.length > 0 ? cart.map(item => item.map((item, index) => `
           <li>
-            ${item.raw_text} <button class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
+            ${item.raw_text} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
           </li>
-        `).join("")).join("")}
+        `).join("")).join("") : `<li>Add some items to your shopping list.</li>`}
       </ul>
+      <button class="btn red white-text" onclick="handleClearShoppingList(event)">Clear List</button>
     `;
 }
 
@@ -149,6 +186,23 @@ var handleRecipeClick = event => {
   currentSearchResults.results[event.target ? event.target.dataset.index : 0] :
   recipeStorage[0].results[0];
 
+  let loading = false;
+  if (loading) {
+    centerSection.innerHTML = `
+    <div class="preloader-wrapper big active">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div><div class="gap-patch">
+          <div class="circle"></div>
+          </div><div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+    `;
+  }
+    
   centerSection.innerHTML =`
     <div class="card">
       <div class="card-image">
@@ -273,6 +327,7 @@ const setRecipeResults = data => {
 };
 
 const getMeals = async (query) => {
+  setLoading = true;
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
 
   await fetch(url, {
@@ -290,9 +345,11 @@ const getMeals = async (query) => {
       setRecipeResults(data)
       handleRecipeClick(data);
       setShoppingList();
+      setLoading = false;
     })
     .catch(err => {
       console.error(err);
+      setLoading = false;
     });  
   };
 
@@ -351,13 +408,22 @@ const handleLogout = event => handleSubmit(event);
 const handleRegister = event => handleSubmit(event);
 
 const setAuthForm = (type) => {
-
   switch (type) {
     case "signin":
       authForm.innerHTML = `
-        <input id="email" type="email" name="email" placeholder="Enter a valid email address">
-        <input id="password" type="password" name="password" placeholder="password">
-        <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" class="validate" type="email" name="email" placeholder="Enter a valid email address">
+          <label for="email">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="password" class="validate" type="password" name="password" placeholder="password">
+          <label for="password">Password</label>
+        </div>
+      </div>
+      <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
       `;
       break;
     case "signout":
@@ -377,7 +443,7 @@ const setAuthForm = (type) => {
     default:
       break;
   }
-  // switchPage("toAuth");
+  switchPage("toAuth");
 };
 
 const setAuth = () => {
@@ -389,11 +455,13 @@ const setAuth = () => {
           <button id="signout" onclick="handleLogout(event)" data-email=${auth.emailLoggedIn} class="btn">Log Out</button>
         `;
         setAuthForm("signout");
+        setNav("signout");
     } else {
         nav.innerHTML = `
           <button class="btn">Log in</button>
         `;
         setAuthForm("signin");
+        setNav("signin");
     }
 
   }
@@ -402,6 +470,7 @@ const setAuth = () => {
         <button class="btn">Log in</button>
       `;
       setAuthForm("signin");
+      setNav("signin");
   }
 };
 
@@ -419,7 +488,9 @@ loggedInUser = {
   token: null
 };
 
-auth.isUserLoggedIn ? setAuth() && setFavorites() : setAuthForm("signin") && setFavorites();
+auth.isUserLoggedIn ? 
+setAuth() && setFavorites() && switchPage("toDashboard") : 
+setAuthForm("signin") && setFavorites();
 
 getMeals("Pasta");
 
@@ -458,7 +529,8 @@ const handleSubmit = (event) => {
         token: token
       };
       setAuth();
-      setNav("signout");
+      // setNav("signout");
+      switchPage("toDashboard");
       break;
 
     case "signin":
@@ -477,7 +549,8 @@ const handleSubmit = (event) => {
             };
             setAuth();
             setFavorites();
-            setNav("signout");
+            // setNav("signout");
+            switchPage("toDashboard");
           }
           else { alert("Please enter a valid email and password."); }
         });
@@ -498,7 +571,8 @@ const handleSubmit = (event) => {
       };
       console.info(loggedInUser, auth);
       setAuth();
-      setNav("signin");
+      // setNav("signin");
+      switchPage("toLanding");
       break;
 
     default:

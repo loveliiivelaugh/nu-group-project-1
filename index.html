@@ -26,7 +26,7 @@
       width: 100%;
       justify-content: center;
       align-items: center;
-      display: none;
+      display: block;
       margin: auto;
     }
 
@@ -39,6 +39,11 @@
     }
 
     #results ul {
+      overflow-y: scroll;
+      max-height: 80vh;
+    }
+
+    #grocery-list ul {
       overflow-y: scroll;
       max-height: 80vh;
     }
@@ -118,18 +123,21 @@
         
         <!-- Start of Authentication Pages -->
         <div id="auth-page" class="container">
-          <div class="card auth-page">
-            <form id="authForm" class="form"></form> 
+          <div class="card large row">
+            <div class="card-content">
+              <form id="authForm" class="form col s6"></form> 
+            </div>
           </div>
-      
-          <div>
-            <nav id="nav" class="right-align">
-              <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Login</button>
-              <button id="register-btn" class="btn" onclick="setAuthForm("register")">Register</button>
-            </nav>
-          </div>
-      
+        </div>
+        <!-- End of Authentication Pages -->
+        
+        
+        <!-- Start of Dashboard Page -->
+        <div id="dashboard-page" class="container">    
           <header>
+            <nav id="nav" class="right-align light-blue lighten-4">
+              <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Logout</button>
+            </nav>
             <div>
               <form id="foodSearchForm">
                 <div class="input-field">
@@ -141,12 +149,6 @@
               </form>
             </div>
           </header>
-        </div>
-        <!-- End of Authentication Pages -->
-
-
-        <!-- Start of Dashboard Page -->
-        <div id="dashboard-page" class="container">    
           <div class="row">
             <section id="results" class="col s3">
               <h2>Grocery List</h2>
@@ -185,6 +187,21 @@
             </section>
 
       <section id="center-section" class="col s6">
+
+        
+        <div class="preloader-wrapper big active">
+          <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+              </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+
+
         <div class="card">
 
           <div class="card-image">
@@ -224,6 +241,8 @@
       </section>
 
       <section id="grocery-list" class="col s3">
+        <button onclick="toggleGroceryList("groceries")">Grocery List</button>
+        <button onclick="toggleGroceryList("favorites")">Favorite Recipe's</button>
         <h2>Grocery List</h2>
         <ul class="collection">
           <li class="collection-item avatar">
