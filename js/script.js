@@ -476,9 +476,6 @@ const setRecipeData = (data) => {
   }`;
 };
 
-// handleRecipeClick(event);
-// setRecipeResults(event)
-
 //getMeals() function handles fetching the meal data from the API.
 const getMeals = async (query) => {
   //set loading to true while we fetch the data triggering the spinner to show in the DOM.
@@ -523,33 +520,7 @@ searchForm.addEventListener('submit', function(event){
 });
 
 
-
 //AUTHENTICATION  //code below is for authentication
-//assign global variable to grab the elements needed in the DOM.
-console.info(nav)
-
-// ) => {//DATA MODELS
-  // userStorage == [
-    // {
-  //   email: '',
-  //   password: ''
-    // }, 
-    // {
-
-    // } //etc...
-  // ];
-  // auth == {
-  //   isUserLoggedIn: Boolean,
-  //   authToken: ''
-  // };
-  // recipeStorage == [
-  //   {
-  //     results: {}, //a stored default recipe search results (chicken)
-  //   }, //etc...
-  // ]
-// };
-
-
 //i dont remember why i sepearated these into their own functions but they all just forward to the same handleSubmit() function.
 const handleLogin = event => handleSubmit(event);
 const handleLogout = event => handleSubmit(event);
@@ -609,7 +580,7 @@ const setAuthForm = (type) => {
       break;
   }
   //after the setting the appropriate form to the DOM then switch to the Auth page using the switchPage wrapper function.
-  switchPage("toAuth");
+  // switchPage("toAuth");
 };
 
 const navHelper = event => {
@@ -726,8 +697,8 @@ loggedInUser = {
 
 //if there is someone logged in, checks onPageLoad
 auth.isUserLoggedIn ? 
-setAuth() && setFavorites() && switchPage("toDashboard") : //setAuth() and setFavorites() then switch to the dashboard page.
-setAuthForm("signin") && setFavorites(); //otherwise setAuthForm() and setFavorites();
+setAuthForm("signin") && setFavorites() && switchPage("toLanding") : //setAuth() and setFavorites() then switch to the dashboard page.
+setAuthForm("signin") && setFavorites() && switchPage("toLanding"); //otherwise setAuthForm() and setFavorites();
 
 //onPageLoad call the getMeals() function passing in a default search item.
 getMeals("Pasta");
