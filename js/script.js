@@ -144,7 +144,7 @@ var handleRecipeClick = event => {
     index = event.target.dataset.index;
   }
   let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
-
+console.log(recipe)
   centerSection.innerHTML =`
     <div class="card">
       <div class="card-image">
@@ -331,8 +331,8 @@ const setRecipeData = (data) => {
   }`;
 };
 
-handleRecipeClick(event);
-setRecipeResults(event)
+// handleRecipeClick(event);
+// setRecipeResults(event)
 
 const getMeals = async (query) => {
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
@@ -474,6 +474,7 @@ loggedInUser = {
 
 auth.isUserLoggedIn ? setAuth() && setFavorites() : setAuthForm("signin") && setFavorites();
 
+getMeals("chicken")
 const generateToken = event => "I am a token!";
 
 const handleSubmit = (event) => {
