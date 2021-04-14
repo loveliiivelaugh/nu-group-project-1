@@ -26,19 +26,20 @@
       width: 100%;
       justify-content: center;
       align-items: center;
-      display: block;
       margin: auto;
       margin-top: 10%;
+      display: none;
     }
 
     #landing-page {
       height: 100vh;
-      margin-top: 10%;
+      display: block;
     }
 
     #dashboard-page {
       height: 100vh;
       margin-top: 10%;
+      display: none;
     }
 
     #results ul {
@@ -61,104 +62,28 @@
   </style>
 
   <body>
+
+    <div>
+      <nav id="nav" class=""></nav>
+    </div>
     <!---Start of Landing Page-->
-    <body>
-      <section class="sec">
+      <section class="sec" id="landing-page">
         <div class="content">
           <div class="textBox">
             <h2>Come Get Your Next Dinner Idea<br><span>Here!</span></h2>
             <p>Have an idea of what you would like to make for dinner but dont have a recipe to go off of? Come explore our recipe options to cook for your loved ones tonight.</p>
-            <a href="#">View Some Dinner Ideas</a>
+            <a href="#" onclick="switchPage('toDashboard')">View Some Dinner Ideas</a>
           </div>
           <div class="imgBox">
-            <img src="logo.png" class="food">
+            <img src="logo.png" class="food" alt="some food image">
           </div>
         </div>
-         <ul class="thumb">
-           <li><img src="assets/images/foodidea1.png" onclick="imgSlider('assets/images/foodidea1.png');changeBgColor('#3DDAD8')"></li>
-           <li><img src="assets/images/foodidea3.jpeg" onclick="imgSlider('assets/images/foodidea3.jpeg');changeBgColor('#AED9DA')"></li>
-           <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
-         </ul>
+        <ul class="thumb">
+          <li><img src="assets/images/foodidea1.png" onclick="imgSlider('assets/images/foodidea1.png');changeBgColor('#3DDAD8')"></li>
+          <li><img src="assets/images/foodidea3.jpeg" onclick="imgSlider('assets/images/foodidea3.jpeg');changeBgColor('#AED9DA')"></li>
+          <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
+        </ul>
       </section>
-   
-      
-      
-    </div>
-
-  <div class="container">
-
-      <!--rows-->
-        <div class="container">
-
-          <div class="row">
-            <div class="col s8">
-              <h4></h4>
-              <p></p>
-            </div>
-            <div class="col s4">
-              <img src="" alt="a placeholder">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">
-              <img src="" alt="a placeholder">
-            </div>
-            <div class="col-8">
-              <h4></h4>
-              <p></p>
-            </div>
-          </div>
-
-          <!-- <footer class="page-footer"></footer> -->
-      
-        </div>
-
-  </header>
-
-  <div class="row">
-    <section id="results" class="col s3">
-      <h2>Grocery List</h2>
-      <ul class="collection">
-        <li class="collection-item avatar">
-          <img src="images/yuna.jpg" alt="" class="circle">
-          <span class="title">Pizza</span>
-          <p>Under 30 Min <br>
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle">folder</i>
-          <span class="title">Pasta</span>
-          <p>Under 30 Min<br>
-            
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle green">insert_chart</i>
-          <span class="title">Chicken</span>
-          <p>Under 30 Min <br>
-            
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle red">play_arrow</i>
-          <span class="title">Salad</span>
-          <p>Under 30 Min <br>
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-      </ul>
-    </section>
-
-    <section id="center-section" class="col s6">
-      <div class="card">
-        <div class="card-image">
-          <img src="./pizza_image.jpeg">
-          <span class="card-title"></span>
-      </div>
         <!-- End of Landing Page -->
         
         <!-- Start of Authentication Pages -->
@@ -298,15 +223,14 @@
 
 
     </div>
-    </body>
     <script type="text/javascript">
-    function imgSlider(anything){
-      document.querySelector('.food').src = anything;
-    }
-    function changeBgColor(color){
-      const sec = document.querySelector('.sec');
-      sec.style.background = color;
-    }
+      function imgSlider(anything){
+        document.querySelector('.food').src = anything;
+      }
+      function changeBgColor(color){
+        const sec = document.querySelector('.sec');
+        sec.style.background = color;
+      }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./js/script.js" async defer></script>
