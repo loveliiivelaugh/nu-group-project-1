@@ -13,7 +13,7 @@
     <!--Let browser know website is optimized for mobile-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="">
   </head>
 
   <style>
@@ -32,10 +32,12 @@
 
     #landing-page {
       height: 100vh;
+      display: block;
     }
 
     #dashboard-page {
       height: 100vh;
+      display: block;
     }
 
     #results ul {
@@ -87,7 +89,7 @@
           </div>
         </div>
       </div>
-      <div class="row" style="background-color: white">
+      <div class="row">
   <!--icons-->
         <div class="col s4">
           <!-- Promo Content 1 goes here -->
@@ -102,15 +104,17 @@
         <div class="col s4">
           <!--Promo Content 4 goes here-->
         </div>
+      </div>
         <!--rows-->
        <div class="container">
          <div class="row">
            <div class="col s8">
-           <h4></h4>
-           <p></p>
+              <h4></h4>
+              <p></p>
            </div>
            <div class="col s4">
-           <img src=""></div>
+              <img src="">
+            </div>
          </div>
          <div class="row">
            <div class="col-4">
@@ -154,52 +158,11 @@
           <!-- <footer class="page-footer"></footer> -->
       
         </div>
+        </div>
 
-  </header>
-
-  <div class="row">
-    <section id="results" class="col s3">
-      <h2>Grocery List</h2>
-      <ul class="collection">
-        <li class="collection-item avatar">
-          <img src="images/yuna.jpg" alt="" class="circle">
-          <span class="title">Pizza</span>
-          <p>Under 30 Min <br>
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle">folder</i>
-          <span class="title">Pasta</span>
-          <p>Under 30 Min<br>
-            
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle green">insert_chart</i>
-          <span class="title">Chicken</span>
-          <p>Under 30 Min <br>
-            
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-        <li class="collection-item avatar">
-          <i class="material-icons circle red">play_arrow</i>
-          <span class="title">Salad</span>
-          <p>Under 30 Min <br>
-          </p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-        </li>
-      </ul>
-    </section>
-
-    <section id="center-section" class="col s6">
-      <div class="card">
-        <div class="card-image">
-          <img src="./pizza_image.jpeg">
-          <span class="card-title"></span>
       </div>
+
+  
         <!-- End of Landing Page -->
         
         <!-- Start of Authentication Pages -->
@@ -216,14 +179,13 @@
         <!-- Start of Dashboard Page -->
         <div id="dashboard-page" class="container">    
           <header>
-            <div>
+            <div class="nav-wrapper">
               <form id="foodSearchForm">
                 <div class="input-field">
-                  <input id="search" name="foodItem" type="search" required>
+                  <input id="search" placeholder="Search chicken, beef or pasta" name="foodItem" type="search" required>
                   <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                  <i class="material-icons">close</i>
+                  <i class="material-icons">close<button id="foodSearchFormBtn" class="btn right" type="submit">Search</button></i>
                 </div>
-                <button id="foodSearchFormBtn" class="btn right" type="submit">Search</button>
               </form>
             </div>
           </header>
@@ -284,7 +246,7 @@
 
           <div class="card-image">
             <img src="" alt="Image of pizza.">
-            <span class="card-title">Card Title</span>
+            <span class="card-title"></span>
           </div>
 
           <!-- Start of time and servings amount section -->

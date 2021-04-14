@@ -96,32 +96,32 @@ const switchPage = page => {
   switch (page) {
     case "toDashboard":
       //switch from landing page or auth page to dashboard page
-      document.getElementById("auth-page").style.display = "none";
-      document.getElementById("landing-page").style.display = "none";
+      document.getElementById("auth-page").style.display = "block";
+      document.getElementById("landing-page").style.display = "block";
       document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
       //switch from auth page to landing page
-      document.getElementById("auth-page").style.display = "none";
-      document.getElementById("dashboard-page").style.display = "none";
+      document.getElementById("auth-page").style.display = "block";
+      document.getElementById("dashboard-page").style.display = "block";
       document.getElementById("landing-page").style.display = "block";
       break;
     case "toAuth":
       //switch from dashboard page or landing page to auth page
       if (auth.isUserLoggedIn) { //if we are logged in route to dashboard
-        document.getElementById("landing-page").style.display = "none";
+        document.getElementById("landing-page").style.display = "block";
         document.getElementById("dashboard-page").style.display = "block";
-        document.getElementById("auth-page").style.display = "none";
+        document.getElementById("auth-page").style.display = "block";
       } else {
-        document.getElementById("landing-page").style.display = "none";
-        document.getElementById("dashboard-page").style.display = "none";
+        document.getElementById("landing-page").style.display = "block";
+        document.getElementById("dashboard-page").style.display = "block";
         document.getElementById("auth-page").style.display = "block";
       }
       break;
     default:
       //switch from auth page to landing page
-      document.getElementById("auth-page").style.display = "none";
-      document.getElementById("dashboard-page").style.display = "none";
+      document.getElementById("auth-page").style.display = "block";
+      document.getElementById("dashboard-page").style.display = "block";
       document.getElementById("landing-page").style.display = "block";
       break;
   }
@@ -267,8 +267,7 @@ var handleRecipeClick = event => {
     </div>
     `;
   }
-  let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
-console.log(recipe)
+  
     
   //when it is loaded set the innerHTML of the center section with the updated searched recipe data.
   centerSection.innerHTML =`
