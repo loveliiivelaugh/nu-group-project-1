@@ -47,6 +47,13 @@ const updateAuth = () => auth = handleLocalStorage("get", "auth");
 let cart = handleLocalStorage("initialize", "cart");
 const updateCart = () => cart = handleLocalStorage("get", "cart");
 
+const showUpdatedStorages = () => console.info({
+  recipes: recipeStorage, 
+  favoriteRecipes: favoriteRecipeStorage, 
+  users: userStorage, 
+  auth: auth, 
+  cart: cart
+});
 
 let currentSearchResults = [];
 let loading = false;
@@ -95,18 +102,21 @@ const handleAuthButtons = ( ) => {};
 const switchPage = page => {
   switch (page) {
     case "toDashboard":
+      showUpdatedStorages();
       //switch from landing page or auth page to dashboard page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("landing-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
+      showUpdatedStorages();
       //switch from auth page to landing page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "none";
       document.getElementById("landing-page").style.display = "block";
       break;
     case "toAuth":
+      showUpdatedStorages();
       //switch from dashboard page or landing page to auth page
       if (auth.isUserLoggedIn) { //if we are logged in route to dashboard
         document.getElementById("landing-page").style.display = "none";
@@ -403,7 +413,7 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "ac72153c36mshd1814c8f1af20f3p1518fbjsnabee85184908",
+      "x-rapidapi-key": "",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
@@ -475,32 +485,46 @@ const setAuthForm = (type) => {
   switch (type) {
     case "signin":
       authForm.innerHTML = `
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="email" class="validate" type="email" name="email" placeholder="Enter a valid email address">
-          <label for="email">Email</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" class="validate" type="email" name="email" placeholder="Enter a valid email address">
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="password" class="validate" type="password" name="password" placeholder="password">
-          <label for="password">Password</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" class="validate" type="password" name="password" placeholder="password">
+          </div>
         </div>
-      </div>
-      <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
+        <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
       `;
       break;
     case "signout":
       authForm.innerHTML = `
-        <input id="email" type="email" name="email" placeholder="Enter a valid email address">
-        <input id="password" type="password" name="password" placeholder="password">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" class="validate" type="email" name="email" placeholder="Enter a valid email address">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" class="validate" type="password" name="password" placeholder="password">
+          </div>
+        </div>
         <button id="signout" type="submit" onclick="handleLogout(event)"  class="btn">Logout</button>
       `;
       break;
     case "register":
       authForm.innerHTML = `
-        <input id="email" type="email" name="email" placeholder="Enter a valid email address">
-        <input id="password" type="password" name="password" placeholder="password">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" class="validate" type="email" name="email" placeholder="Enter a valid email address">
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="password" class="validate" type="password" name="password" placeholder="password">
+          </div>
+        </div>
         <button id="register" type="submit" onclick="handleRegister(event)" class="btn">Register</button>
       `;
       break;
@@ -511,6 +535,17 @@ const setAuthForm = (type) => {
   switchPage("toAuth");
 };
 
+const navHelper = event => {
+  console.info(event);
+  if ( event.target.id === "register-btn" ) {
+    setAuthForm("register");
+    switchPage("toAuth");
+  }
+  if ( event.target.id === "login-btn" ) {
+    setAuthForm("signin");
+    switchPage("toAuth");
+  }
+}
 
 // setNav() function to update the HTML in the Nav element whenever there are authentication updates.
 const setNav = type => {
@@ -518,14 +553,44 @@ const setNav = type => {
   switch (type) {
     case "signin":
       nav.innerHTML = `
-        <button id="" class="btn" onclick="switchPage("toDashboard")">Home</button>
-        <button id="login-btn" class="btn" onclick="setAuth()">Login</button>
-        <button id="register-btn" class="btn" onclick="setAuth()">Register</button>
+        <a 
+          class="btn-floating waves-effect waves-light red" 
+          style="float: left; margin: 1%;"
+          onclick="switchPage('toLanding')" 
+        >
+          <i class="material-icons" id="favoriteBtn">favorite</i>
+        </a>
+        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
       `;
       break;
     case "signout":
       nav.innerHTML = `
+        <a 
+          class="btn-floating waves-effect waves-light red" 
+          style="float: left; margin: 1%;"
+          onclick="switchPage('toLanding')" 
+        >
+          <i class="material-icons" id="favoriteBtn">favorite</i>
+        </a>
+        <span style="float: left; color: darkblue;">${auth.emailLoggedIn}</span>
+        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
         <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
+      `;
+      break;
+    default:
+      nav.innerHTML = `
+        <a 
+          class="btn-floating waves-effect waves-light red" 
+          style="float: left; margin: 1%;"
+          onclick="switchPage('toLanding')" 
+        >
+          <i class="material-icons" id="favoriteBtn">favorite</i>
+        </a>
+        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
       `;
       break;
   }
@@ -535,7 +600,7 @@ auth.isUserLoggedIn ? setNav("signout") : setNav("signin");
 
 //setAuth() function that updates the nav element in the DOM based on if there is a user already logged in or not.
 const setAuth = () => {
-  console.info("Whats going on here?", userStorage.length, auth);
+  console.info("Whats going on here?", userStorage, auth);
   //if there is someone an auth local storage instance array
   if (auth) {
     //if there is a userLoggedIn == true.
@@ -619,7 +684,8 @@ const handleSubmit = (event) => {
       //push the newly created user object to the userStorage local storage users instance
       userStorage.push(user);
       //set the userStorage array to localstorage using the handleLocalStorage wrapper function
-      handleLocalStorage("userStorage", "set", userStorage);
+      handleLocalStorage("set", "users", userStorage);
+      updateUserStorage();
        //if user is currently logged in, log them out before logging in the new person using setAuth().
       setAuth();
       //assign the value of token to a new randomly generated string using the generateToken function
@@ -630,6 +696,7 @@ const handleSubmit = (event) => {
         token: token, //save the token in localstorage to match with loggedInUser later for validation
         emailLoggedIn: user.email //set the email of user logged in
       });
+      updateAuth();
       //update the loggedInUser variable in "state"
       loggedInUser = {
         email: user.email,
@@ -637,7 +704,8 @@ const handleSubmit = (event) => {
       };
       //update auth status with setAuth()
       setAuth();
-      // setNav("signout");
+      setNav("signout");
+      showUpdatedStorages();
       //switch to the dashboard page using the switchPage() function
       switchPage("toDashboard");
       break;
@@ -645,11 +713,11 @@ const handleSubmit = (event) => {
       //if its "singnin"
     case "signin":
       //if there is data in the userStorage user local storage instance by checking its length.
+      console.info(userStorage.length, userStorage)
       if ( userStorage.length > 0 ) {
         //foreach item in the userStorage user local storage instance
         userStorage.forEach(userInDb => {
           //check each user.email in userStorage with the new user email and pass.
-          //! -- this is why this doesnt work when trying to login.. need to fix this asap!
           if (userInDb.email == user.email && userInDb.password == user.password) {
             //set a token to a randomly generated token
             token = generateToken();
@@ -659,6 +727,7 @@ const handleSubmit = (event) => {
               token: token, //save the generated token
               emailLoggedIn: user.email //save the email of the user just logged in
             });
+            updateAuth();
             //handle setting the loggedInUser variable to match with logged in user in storage through out application flow for user validation
             loggedInUser = {
               email: user.email,
@@ -666,15 +735,16 @@ const handleSubmit = (event) => {
             };
             //update auth status with setAuth()
             setAuth();
-            //update the data in the favorites section in the DOM
-            setFavorites();
-            // setNav("signout");
+            //update the data in the favorites section in the DOM //todo <-- Fix this.
+            // setFavorites();
+            setNav("signout");
+            showUpdatedStorages();
             //switch to the dashboard page using the switchPage() function
             switchPage("toDashboard");
           } //if i dont even know what this is checking need to validate this
           else { alert("Please enter a valid email and password."); }
         });
-      }
+      } 
       else {
         //if no users stored in local storage match the user signing in 
         alert("No users found with those credentials.");
@@ -695,9 +765,11 @@ const handleSubmit = (event) => {
         email: user.email,
         token: token
       };
+      updateAuth();
       //update the auth status and auth items in DOM.
       setAuth();
-      // setNav("signin");
+      setNav("signin");
+      showUpdatedStorages();
       //switch to the landing page using the switchPage() function
       switchPage("toLanding");
       break;
