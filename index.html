@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>Landing Page</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Import Google Icon Font-->
@@ -28,16 +28,19 @@
       align-items: center;
       display: block;
       margin: auto;
+      margin-top: 10%;
     }
 
     #landing-page {
       height: 100vh;
       display: block;
+      margin-top: 10%;
     }
 
     #dashboard-page {
       height: 100vh;
       display: block;
+      margin-top: 10%;
     }
 
     #results ul {
@@ -60,75 +63,29 @@
   </style>
 
   <body>
-
-    <div>
-      <nav id="nav" class="right-align light-blue lighten-4">
-        <!-- <button id="signin" type="submit" onclick="handleLogin(event)" class="btn">Login</button>
-        <button id="login-btn" class="btn" onclick="setAuthForm("signin")">Logout</button> -->
-      </nav>
-    </div>
-      <!--Start of landing page-->
-    <div id="landing-page" class="container">
-        <nav class="right-align">
-          <div class="nav-wrapper">
-            <a href="#" class="brand-logo right">Account</a>
+    <!---Start of Landing Page-->
+    <body>
+      <section class="sec">
+        <div class="content">
+          <div class="textBox">
+            <h2>Come Get Your Next Dinner Idea<br><span>Here!</span></h2>
+            <p>Have an idea of what you would like to make for dinner but dont have a recipe to go off of? Come explore our recipe options to cook for your loved ones tonight.</p>
+            <a href="#">View Some Dinner Ideas</a>
           </div>
-        </nav>
-      <!---jumbotron-->
-      <div class="row">
-        <div class="col s12 m15">
-          <div class="card">
-            <div class="card-image">
-              <img src="logo.png" alt="placeholder" style="width: 100px;"></img>
-              <span class="card-title"></span>
-            </div>
-            <div class="card-content">
-              <p>Come Get Your Next Dinner Idea Here!</p>
-            </div>
-            <div class="card-action"></div>
+          <div class="imgBox">
+            <img src="logo.png" class="food">
           </div>
         </div>
-      </div>
-      <div class="row">
-  <!--icons-->
-        <div class="col s4">
-          <!-- Promo Content 1 goes here -->
-          <p>test</p>
-        </div>
-        <div class="col s4">
-          <!-- Promo Content 2 goes here -->
-        </div>
-        <div class="col s4">
-          <!-- Promo Content 3 goes here -->
-        </div>
-        <div class="col s4">
-          <!--Promo Content 4 goes here-->
-        </div>
-      </div>
-        <!--rows-->
-       <div class="container">
-         <div class="row">
-           <div class="col s8">
-              <h4></h4>
-              <p></p>
-           </div>
-           <div class="col s4">
-              <img src="">
-            </div>
-         </div>
-         <div class="row">
-           <div class="col-4">
-           <img src="">
-           </div>
-           <div class="col-8">
-             <h4></h4>
-             <p></p>
-           </div>
-         </div>
-         <!-- <footer class="page-footer">
-         </footer> -->
+         <ul class="thumb">
+           <li><img src="assets/images/foodidea1.png" onclick="imgSlider('assets/images/foodidea1.png');changeBgColor('#3DDAD8')"></li>
+           <li><img src="assets/images/foodidea3.jpeg" onclick="imgSlider('assets/images/foodidea3.jpeg');changeBgColor('#AED9DA')"></li>
+           <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
+         </ul>
+      </section>
+   
       
-        </div>
+      
+    </div>
 
   <div class="container">
 
@@ -141,13 +98,13 @@
               <p></p>
             </div>
             <div class="col s4">
-              <img src="" alt="a placeholder"></img>
+              <img src="" alt="a placeholder">
             </div>
           </div>
 
           <div class="row">
             <div class="col-4">
-              <img src="" alt="a placeholder"></img>
+              <img src="" alt="a placeholder">
             </div>
             <div class="col-8">
               <h4></h4>
@@ -166,12 +123,14 @@
         <!-- End of Landing Page -->
         
         <!-- Start of Authentication Pages -->
-        <div id="auth-page" class="container">
-          <div class="card large row">
-            <div class="card-content">
-              <form id="authForm" class="form col s6"></form> 
+        <div id="auth-page" class="container center-align">
+          <center>
+            <div class="card large row container center-align">
+              <div class="card-content">
+                <form id="authForm" class="form col s12"></form> 
+              </div>
             </div>
-          </div>
+          </center>
         </div>
         <!-- End of Authentication Pages -->
         
@@ -281,8 +240,8 @@
       </section>
 
       <section id="grocery-list" class="col s3">
-        <button onclick="toggleGroceryList("groceries")">Grocery List</button>
-        <button onclick="toggleGroceryList("favorites")">Favorite Recipe's</button>
+        <button onclick="toggleGroceryList('groceries')">Grocery List</button>
+        <button onclick="toggleGroceryList('favorites')">Favorite Recipe's</button>
         <h2>Grocery List</h2>
         <ul class="collection">
           <li class="collection-item avatar">
@@ -298,6 +257,17 @@
   </div>
 
 
+    </div>
+    </body>
+    <script type="text/javascript">
+    function imgSlider(anything){
+      document.querySelector('.food').src = anything;
+    }
+    function changeBgColor(color){
+      const sec = document.querySelector('.sec');
+      sec.style.background = color;
+    }
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./js/script.js" async defer></script>
   </body>
