@@ -13,17 +13,22 @@ as user friendly as possible. The user can simply make an account using their em
 they create an account they are able to search for hundreds of recipes related to chicken, beef,
 pasta, pizza and many more.
 
-- 1. The user would search by typing in to the top search bar for something like 'chicken'.
-- 2. The user will see a list of different recipes populate in the main section of the page.
-- 3. The user can click on the recipe that they like the most and this will reveal all the
+- 1. The user is greeted with the home page, the user is encouraged to find their Next Dinner Idea.
+- 2. To go to the recipes section, the user can either click on “Dinner Ideas” or “Home” button. 
+     The user can even register for a free account if they click on the register button. 
+- 3. The user would search by typing in to the top search bar for something like 'chicken'.
+- 4. The user will see a list of different recipes populate in the main section of the page.
+- 5. The user can click on the recipe that they like the most and this will reveal all the
   the ingredients needed for that specific recipe. 
-- 4. The user can add or deduct the amount of servings needed and add the ingredients to 
+- 6. The user can add or deduct the amount of servings needed and add the ingredients to 
   their shopping cart.
-- 5. The user can also add their favorite recipes to a personal favorite list.
+- 7. The user can also add their favorite recipes to a personal favorite list if they are registered 
+     with an account.
 
 
 ## Demo/Screenshot of TastyGen
 <img src="./assets/images/tastyGen_screenshot.png">
+
 
 
 ## Future Implementations
@@ -43,10 +48,12 @@ pasta, pizza and many more.
 - GitHub (https://www.GitHub.com/) 
 - Trello (https://www.trello.com) 
 
+
 ## Training Tools
 
 - [Reviewing Pull Requests](https://lab.github.com/githubtraining/reviewing-pull-requests)
 - [Managing Merge Conflicts](https://lab.github.com/githubtraining/managing-merge-conflicts)
+
 
 ## Credits
 
