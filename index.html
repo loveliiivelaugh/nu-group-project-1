@@ -13,7 +13,7 @@
     <!--Let browser know website is optimized for mobile-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="style.css">
   </head>
 
   <style>
@@ -86,42 +86,6 @@
           <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
         </ul>
       </section>
-      
-    </div>
-
-  <div class="container">
-
-      <!--rows-->
-        <div class="container">
-
-          <div class="row">
-            <div class="col s8">
-              <h4></h4>
-              <p></p>
-            </div>
-            <div class="col s4">
-              <img src="" alt="a placeholder">
-            </div>
-          </div>
-
-          <div class="row">
-            <div class="col-4">
-              <img src="" alt="a placeholder">
-            </div>
-            <div class="col-8">
-              <h4></h4>
-              <p></p>
-            </div>
-          </div>
-
-          <!-- <footer class="page-footer"></footer> -->
-      
-        </div>
-        </div>
-
-      </div>
-
-  
         <!-- End of Landing Page -->
         
         <!-- Start of Authentication Pages -->
@@ -241,18 +205,24 @@
 
       </section>
 
-      <section id="grocery-list" class="col s3">
-        <button onclick="toggleGroceryList('groceries')">Grocery List</button>
-        <button onclick="toggleGroceryList('favorites')">Favorite Recipe's</button>
-        <h2>Grocery List</h2>
-        <ul class="collection">
-          <li class="collection-item avatar">
-            <i class="material-icons circle green">insert_chart</i>
-            <span class="title">Groceries</span>
-            <p>Add some items to your shopping list</p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
-        </ul>
+      <section class="col s3">
+        <div class="card-tabs">
+          <ul class="tabs tabs-fixed-width">
+            <li class="tab"><a href="#" onclick="toggleGroceryList('groceries')">Grocery List</a></li>
+            <li class="tab"><a class="active" href="#" onclick="toggleGroceryList('favorites')">Favorite Recipe's</a></li>
+          </ul>
+        </div>
+        <div id="grocery-list">
+          <h2>Grocery List</h2>
+          <ul class="collection">
+            <li class="collection-item avatar">
+              <i class="material-icons circle green">insert_chart</i>
+              <span class="title">Groceries</span>
+              <p>Add some items to your shopping list</p>
+              <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+            </li>
+          </ul>
+        </div>
       </section>
     </div>
 
