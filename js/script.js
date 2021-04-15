@@ -58,12 +58,7 @@ const showUpdatedStorages = () => console.info({
 });
 
 let currentSearchResults = [];
-let quantity = 0;
-let loading = false;
-const updateLoading = isLoading => loading = isloading;
-
-
-const handleAuthButtons = ( ) => {};
+let quantity = 0.5;
 
 /**
  * TABLE OF FUNCTIONS
@@ -106,21 +101,21 @@ const handleAuthButtons = ( ) => {};
 const switchPage = page => {
   switch (page) {
     case "toDashboard":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from landing page or auth page to dashboard page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("landing-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from auth page to landing page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "none";
       document.getElementById("landing-page").style.display = "block";
       break;
     case "toAuth":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from dashboard page or landing page to auth page
       if (auth.isUserLoggedIn) { //if we are logged in route to dashboard
         document.getElementById("landing-page").style.display = "none";
@@ -182,8 +177,7 @@ const setFavorites = () => {
   }
 };
 
-//todo --> update comments to reflect favorites
-//deleteShoppingItem(), function that deletes the shopping item from the list
+//deleteFavoritesItem(), function that deletes the favorites item from the list
 const deleteFavoritesItem = event => {
   let index = parseInt(event.target.dataset.index)
   favoriteRecipeStorage.splice(index, 1);
@@ -192,8 +186,8 @@ const deleteFavoritesItem = event => {
   setFavorites();
 };
 
-//handleClearShoppingList() handles clearing the entire shopping list
-const handleClearFavorites = event => {
+//handleClearFavoritesList() handles clearing the entire favorites list
+const handleClearFavorites = () => {
   //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
   handleLocalStorage("remove", "favoriteRecipes");
   updateFavoriteRecipeStorage();
@@ -232,7 +226,7 @@ const handleAddToFavorites = event => {
 };
 
 //toggleGroceryList() handles toggling the grocery list and favorites tab
-const toggleGroceryList = (toggle) => {
+const toggleGroceryList = toggle => {
     switch (toggle) {
       case "groceries":
         setShoppingList();
@@ -255,7 +249,7 @@ const deleteShoppingItem = event => {
 };
 
 //handleClearShoppingList() handles clearing the entire shopping list
-function handleClearShoppingList(event) {
+function handleClearShoppingList() {
   //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
   handleLocalStorage("remove", "cart");
   //and then update the shoppingList()
@@ -270,8 +264,9 @@ function setShoppingList() {
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
           //otherwise we will return <li>Add some items to your shopping list.</li>
           cart.length > 0 ? cart.map((item, index) => `
-          <li>
-            ${item.raw_text} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
+          <li class="row">
+            <p class="col s10">${item.raw_text}</p>
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteShoppingItem(event)">x</a>
           </li>
         `).join("") : `<li>Add some items to your shopping list.</li>`}
       </ul>
@@ -303,9 +298,6 @@ function handleAddToShopping(event) {
 const handleServings = event => {
   event.target.id === "addBtn" && (quantity += 1);
   event.target.id === "removeBtn" && quantity > 1 && (quantity -= 1);
-
-  // handleRecipeClick(event);
-  setServings
   console.info("Servings: " + quantity);
 };
 
@@ -323,6 +315,20 @@ const setServings = yields =>
       .split('')[1]) * quantity
     }`;
 
+
+const setSpinner = () => centerSection.innerHTML = `
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+        </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+  `;
 //function that handles when a recipe item returned from the API is clicked.
 var handleRecipeClick = event => {
   //ternary conditional that assigns the result of the condition to the recipe variable.
@@ -332,26 +338,10 @@ var handleRecipeClick = event => {
   recipeStorage[0].results[0];//if there is no data in the currentSearchResults array then set the selected recipe to the first item in the recipeStorage local storae instance.
 
   quantity = recipe.num_servings;
-  console.info(quantity);
 
+  let loading = false;
   //if isLoading is true then set the spinner in the DOM.
-  // todo -> need to finish this and wrap in own function to be called here.
-  if (true) {
-    centerSection.innerHTML = `
-    <div class="preloader-wrapper big active">
-      <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-          </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-    </div>
-    `;
-  }
-  
+  if (loading) { setSpinner(); }
     
   //when it is loaded set the innerHTML of the center section with the updated searched recipe data.
   centerSection.innerHTML =`
@@ -384,21 +374,15 @@ var handleRecipeClick = event => {
           <span class="card-title activator grey-text text-darken-4">
             ${recipe.name}<i class="material-icons right">more_vert</i>
           </span>
-          <p>${recipe.description && recipe.description}<a href="#">This is a link</a></p>
+          <p>${recipe.description && recipe.description}</p>
         </div>
         
           <div class="card-content">
             <ul>
               ${recipe.sections[0].components && 
                 recipe.sections[0].components.map(component => `
-                <li><span class="material-icons">check_circle</span> ${component.raw_text}
-                  <li>
-                    ${component.measurements && 
-                      component.measurements
-                        .map(measurement => parseInt(measurement.quantity) * quantity + ' ' + measurement.unit.name).join("")}
-                  </li>
-                </li>
-              `).join("")}
+                  <li><span class="material-icons">check_circle</span> ${component.raw_text}</li>
+                `).join("")}
             </ul>
             <a class="btn-floating">
               <i 
@@ -558,8 +542,6 @@ const setRecipeData = (data) => {
 
 //getMeals() function handles fetching the meal data from the API.
 const getMeals = async (query) => {
-  //set loading to true while we fetch the data triggering the spinner to show in the DOM.
-  // updateLoading(true);
   //set a dynamic url to a variable passing in the query from the search form.
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
 
@@ -584,14 +566,9 @@ const getMeals = async (query) => {
       handleRecipeClick(data);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
-      setAuth();
-      //set loading to false
-      // updateLoading(false);
     })
     .catch(exception => {
       console.error(exception); //if there is an error, catch it and log it.
-      //update loading to false.
-      // updateLoading(false);
     });  
   };
 
@@ -614,7 +591,6 @@ const handleRegister = event => handleSubmit(event);
 //setAuthForm() updates the auth form on the auth page every time there is an auth change or update.
 const setAuthForm = (type) => {
   //utilizes switch function to check the type is equal to signin, signout, or register.
-  console.log("Am I being clicked?", type)
   switch (type) {
     case "signin":
       authForm.innerHTML = `
@@ -665,11 +641,9 @@ const setAuthForm = (type) => {
       break;
   }
   //after the setting the appropriate form to the DOM then switch to the Auth page using the switchPage wrapper function.
-  // switchPage("toAuth");
 };
 
 const navHelper = event => {
-  console.info(event);
   if ( event.target.id === "register-btn" ) {
     setAuthForm("register");
     switchPage("toAuth");
@@ -729,41 +703,6 @@ const setNav = type => {
   }
 };
 auth.isUserLoggedIn ? setNav("signout") : setNav("signin");
-
-
-//setAuth() function that updates the nav element in the DOM based on if there is a user already logged in or not.
-const setAuth = () => {
-  console.info("Whats going on here?", userStorage, auth);
-  //if there is someone an auth local storage instance array
-  if (auth) {
-    //if there is a userLoggedIn == true.
-    if ( auth.isUserLoggedIn ) {
-      //update the html in the nav element.
-        // nav.innerHTML = `
-        //   <p>Logged in as ${auth.emailLoggedIn}</p>
-        //   <button id="signout" onclick="handleLogout(event)" data-email=${auth.emailLoggedIn} class="btn">Log Out</button>
-        // `;
-        //set the auth form to "signout" using the setAuthForm()
-        // setAuthForm("signout");
-        //setNav function to "signout" //todo -->I think these functions are redundant and can be combined.
-        // setNav("signout");
-    } else {
-        // nav.innerHTML = `
-        //   <button class="btn">Log in</button>
-        // `;
-        // setAuthForm("signin");
-        // setNav("signin");
-    }
-
-  }
-  else {
-    // nav.innerHTML = `
-    //     <button class="btn">Log in</button>
-    //   `;
-      // setAuthForm("signin");
-      // setNav("signin");
-  }
-};
 
 //todo -->  work in progress. setting temporary loggedInUser to accessible variable
 let loggedInUser = {
@@ -846,7 +785,6 @@ const handleSubmit = (event) => {
       //if its "singnin"
     case "signin":
       //if there is data in the userStorage user local storage instance by checking its length.
-      console.info(userStorage.length, userStorage)
       if ( userStorage.length > 0 ) {
         //foreach item in the userStorage user local storage instance
         userStorage.forEach(userInDb => {

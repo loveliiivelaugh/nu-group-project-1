@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Landing Page</title>
+    <title>TastyGen</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Import Google Icon Font-->
@@ -66,7 +66,7 @@
   <body>
 
     <div>
-      <nav id="nav" class=""></nav>
+      <nav id="nav"></nav>
     </div>
     <!---Start of Landing Page-->
       <section class="sec" id="landing-page">
@@ -88,145 +88,59 @@
       </section>
         <!-- End of Landing Page -->
         
-        <!-- Start of Authentication Pages -->
-        <div id="auth-page" class="container center-align">
-          <center>
-            <div class="card large row container center-align">
-              <div class="card-content">
-                <form id="authForm" class="form col s12"></form> 
-              </div>
-            </div>
-          </center>
-        </div>
-        <!-- End of Authentication Pages -->
-        
-        
-        <!-- Start of Dashboard Page -->
-        <div id="dashboard-page" class="container">    
-          <header>
-            <div class="nav-wrapper">
-              <form id="foodSearchForm">
-                <div class="input-field">
-                  <input id="search" placeholder="Search chicken, beef or pasta" name="foodItem" type="search" required>
-                  <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                  <i class="material-icons">close<button id="foodSearchFormBtn" class="btn right" type="submit">Search</button></i>
-                </div>
-              </form>
-            </div>
-          </header>
-          <div class="row">
-            <section id="results" class="col s3">
-              <h2>Grocery List</h2>
-              <ul class="collection">
-                <li class="collection-item avatar">
-                  <img src="" alt="Image." class="circle">
-                  <span class="title">Pizza</span>
-                  <p>Under 30 Min <br>
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle">folder</i>
-                  <span class="title">Pasta</span>
-                  <p>Under 30 Min<br>
-                    
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle green">insert_chart</i>
-                  <span class="title">Chicken</span>
-                  <p>Under 30 Min <br>
-                    
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle red">play_arrow</i>
-                  <span class="title">Salad</span>
-                  <p>Under 30 Min <br>
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-              </ul>
-            </section>
-
-      <section id="center-section" class="col s6">
-
-
-        <div class="preloader-wrapper big active">
-          <div class="spinner-layer spinner-blue">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-              </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-image">
-            <img src="" alt="Image of pizza.">
-            <span class="card-title"></span>
-          </div>
-
-          <!-- Start of time and servings amount section -->
+    <!-- Start of Authentication Pages -->
+    <div id="auth-page" class="container center-align">
+      <center>
+        <div class="card large row container center-align">
           <div class="card-content">
-            <p><span class="material-icons">access_time</span>
-              <span>30 Minutes </span>Servings <span id="servings">0</span>
-              <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-              <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
-            </p>
-            <!-- <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a> -->
+            <form id="authForm" class="form col s12"></form> 
           </div>
-          <!-- Start of time and servings amount section -->
+        </div>
+      </center>
+    </div>
+    <!-- End of Authentication Pages -->
+        
+        
+    <!-- Start of Dashboard Page -->
+    <div id="dashboard-page" style="padding: 5%;">    
+      <header class="col s12">
+        <form id="foodSearchForm">
+          <div class="input-field">
+            <input 
+              id="search" 
+              placeholder="Search chicken, beef or pasta" 
+              name="foodItem" 
+              type="search" 
+              required
+            >
+          </div>
+          <button class="btn" type="submit">Search</button>
+        </form>
+      </header>
 
-          <!-- Start of Ingredient section -->
-            <div class="card">
-              <div class="card-image"></div>
-              <div class="card-content">
-                <ul>
-                  <li><span class="material-icons">check_circle</span> Store bought pizza crust or refrigerated crust</li>
-                  <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
-                  <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
-                  <li><span class="material-icons">check_circle</span>1 Store bought pizza crust or refrigerated crust</li>
-                  <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
-                  <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
-                </ul>
-                <a class="btn-floating"><i class="material-icons" id="cartBtn">shopping_cart</i></a>
+      <div class="row">
+        <section id="results" class="col s3"></section>
+
+        <section id="center-section" class="col s6">
+          <!-- Spinner while data is loading -->
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
               </div>
             </div>
-            <!-- End of Ingredient section -->
-        </div>
+          </div>
+        </section>
 
-      </section>
+        <section id="grocery-list" class="col s3"></section>
+      </div>
+      <!-- End of Dashboard Page -->
 
-      <section class="col s3">
-        <div class="card-tabs">
-          <ul class="tabs tabs-fixed-width">
-            <li class="tab"><a href="#" onclick="toggleGroceryList('groceries')">Grocery List</a></li>
-            <li class="tab"><a class="active" href="#" onclick="toggleGroceryList('favorites')">Favorite Recipe's</a></li>
-          </ul>
-        </div>
-        <div id="grocery-list">
-          <h2>Grocery List</h2>
-          <ul class="collection">
-            <li class="collection-item avatar">
-              <i class="material-icons circle green">insert_chart</i>
-              <span class="title">Groceries</span>
-              <p>Add some items to your shopping list</p>
-              <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-            </li>
-          </ul>
-        </div>
-      </section>
     </div>
-
-  </div>
 
 
     </div>
