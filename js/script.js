@@ -24,8 +24,10 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
       return JSON.parse(localStorage.getItem(nameOfStorage));
     case "set":
       return localStorage.setItem(nameOfStorage, JSON.stringify(data));
+    case "remove":
+      return localStorage.removeItem(nameOfStorage);
     case "clear":
-      return localStorage.clear(nameOfStorage);
+      return localStorage.clear();
     default:
       break;
   }
@@ -56,8 +58,10 @@ const showUpdatedStorages = () => console.info({
 });
 
 let currentSearchResults = [];
+let quantity = 0;
 let loading = false;
-// const updateLoading = isLoading => loading = isloading;
+const updateLoading = isLoading => loading = isloading;
+
 
 const handleAuthButtons = ( ) => {};
 
@@ -143,31 +147,92 @@ const setFavorites = () => {
   if (auth.isUserLoggedIn) {
     //set the favorites container
     groceryList.innerHTML = `
-      <h3>${auth.emailLoggedIn}'s Favorite Recipe's</h3>
-      ${//check the favoriteRecipeStorage local storage instance
+      <h4>${auth.emailLoggedIn}'s Favorite Recipe's</h4>
+      <ul>
+      ${favoriteRecipeStorage.length > 0 ?//check the favoriteRecipeStorage local storage instance
         favoriteRecipeStorage //filter it by checking if the email from the favorited item matched the email of the user logged in.
         .filter(favorite => favorite.userEmail === auth.emailLoggedIn)//after filtering map the results into a list item.
-        .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
-        .join("")//removes the commas left over from joining the string from mapping an array.
+        .map((favorite, index) => `
+          <li>${favorite.recipeName && favorite.recipeName} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteFavoritesItem(event)">X</button></li>
+          `)
+        .join("") : //removes the commas left over from joining the string from mapping an array.
+        `<li>Add some items to your favorites list.</li>`
       }
+      </ul>
+      <button class="btn red white-text" onclick="handleClearFavorites(event)">Clear List</button>
     `;
   }
   else {
     //if the above condition is not true then run this code block that just does the same thing but checks for 
     //a matching house email account.
     groceryList.innerHTML = `
-      ${favoriteRecipeStorage
+      <h4>Favorite Recipe's</h4>
+      <ul>
+      ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
-        .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
-        .join("")
+        .map((favorite, index) => `
+          <li>${favorite.recipeName && favorite.recipeName} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteFavoritesItem(event)">X</button></li>
+          `)
+        .join("") :
+        `<li>Add some items to your favorites list.</li>`
       }
+      </ul>
+      <button class="btn red white-text" onclick="handleClearFavorites(event)">Clear List</button>
     `;
   }
 };
 
+//todo --> update comments to reflect favorites
+//deleteShoppingItem(), function that deletes the shopping item from the list
+const deleteFavoritesItem = event => {
+  let index = parseInt(event.target.dataset.index)
+  favoriteRecipeStorage.splice(index, 1);
+  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+  updateFavoriteRecipeStorage();
+  setFavorites();
+};
+
+//handleClearShoppingList() handles clearing the entire shopping list
+const handleClearFavorites = event => {
+  //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
+  handleLocalStorage("remove", "favoriteRecipes");
+  updateFavoriteRecipeStorage();
+  //and then update the shoppingList()
+  setFavorites();
+};
+
+
+//handleAddToFavorites() function handles adding a seleted item to the favorites list.
+const handleAddToFavorites = event => {
+  let recipeName = event.target.dataset.recipe;
+  let userEmail = auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com";
+  
+  favoriteRecipeStorage.forEach(favoriteRecipe => {
+    if (
+      favoriteRecipe.recipeName === recipeName && 
+      favoriteRecipe.userEmail === userEmail
+      ) {
+        alert("You already have that item in your favorites list.");
+        return;
+      } else {
+      //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+      favoriteRecipeStorage.push({ 
+        //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+        userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+        recipeName: recipeName,
+      });
+      //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+      handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+      //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+      updateFavoriteRecipeStorage();
+      //call the setFavorites() function to update the updated favorites in the DOM.
+      setFavorites();
+    }
+  });
+};
+
 //toggleGroceryList() handles toggling the grocery list and favorites tab
 const toggleGroceryList = (toggle) => {
-  //todo -> this function is not done yet needs to be finished.
     switch (toggle) {
       case "groceries":
         setShoppingList();
@@ -181,30 +246,18 @@ const toggleGroceryList = (toggle) => {
 };
 
 //deleteShoppingItem(), function that deletes the shopping item from the list
-//todo -> this function is not done yet needs to be finished.
-function deleteShoppingItem(event) { console.info(event.target.dataset.index, cart); }
-
-//handleAddToFavorites() function handles adding a seleted item to the favorites list.
-const handleAddToFavorites = event => {
-  //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
-  console.log(event.target.dataset.recipe)
-  favoriteRecipeStorage.push({ 
-    //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
-    userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-    recipeName: event.target.dataset.recipe,
-  });
-  //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
-  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
-  //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
-  updateFavoriteRecipeStorage();
-  //call the setFavorites() function to update the updated favorites in the DOM.
-  setFavorites();
+const deleteShoppingItem = event => {
+  let index = parseInt(event.target.dataset.index)
+  cart.splice(index, 1);
+  handleLocalStorage("set", "cart", cart);
+  updateCart();
+  setShoppingList();
 };
 
 //handleClearShoppingList() handles clearing the entire shopping list
 function handleClearShoppingList(event) {
   //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
-  handleLocalStorage("clear", "cart");
+  handleLocalStorage("remove", "cart");
   //and then update the shoppingList()
   setShoppingList();
 }
@@ -216,11 +269,11 @@ function setShoppingList() {
       <ul>
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
           //otherwise we will return <li>Add some items to your shopping list.</li>
-          cart.length > 0 ? cart.map(item => item.map((item, index) => `
+          cart.length > 0 ? cart.map((item, index) => `
           <li>
             ${item.raw_text} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
           </li>
-        `).join("")).join("") : `<li>Add some items to your shopping list.</li>`}
+        `).join("") : `<li>Add some items to your shopping list.</li>`}
       </ul>
       <button class="btn red white-text" onclick="handleClearShoppingList(event)">Clear List</button>
     `;
@@ -237,16 +290,38 @@ function handleAddToShopping(event) {
         //if the name of one of those items is equal to the recipe name grabbed from the datast attr
         if ( currentSearchResults.results[i].name === recipeName ) {
           //then push each of the ingredients from the selected item into the cart storage array
-          cart.push(currentSearchResults.results[i].sections[0].components);
-          //set the updated cart storage array in localstorage using the handle localstorage wrapper.
+          currentSearchResults.results[i].sections[0].components.forEach(component => cart.push(component));
+          //set the updated cart storage array in localstorage using the handle localstorage wrapper function.
           handleLocalStorage("set", "cart", cart);
-          //call the setShoppingList() to update the Shopping List in the DOM with the update cart storage data.
+          //call the setShoppingList() to update the Shopping List in the DOM with the updated cart storage data.
           setShoppingList();
         }
       }
   }
 }
-console.info(currentSearchResults, recipeStorage[0])
+
+const handleServings = event => {
+  event.target.id === "addBtn" && (quantity += 1);
+  event.target.id === "removeBtn" && quantity > 1 && (quantity -= 1);
+
+  // handleRecipeClick(event);
+  setServings
+  console.info("Servings: " + quantity);
+};
+
+const setServings = yields =>
+  `${yields &&
+    parseInt((yields)
+      .split(" ")[1]
+      .replace(/[^0-9]/g, "")
+      .split('')[0]) * quantity
+    } - 
+  ${yields &&
+    parseInt((yields)
+      .split(" ")[1]
+      .replace(/[^0-9]/g, "")
+      .split('')[1]) * quantity
+    }`;
 
 //function that handles when a recipe item returned from the API is clicked.
 var handleRecipeClick = event => {
@@ -255,7 +330,10 @@ var handleRecipeClick = event => {
   let recipe = currentSearchResults.results ? // ... index of if the recipeClick event is there then set it to the dataset index
   currentSearchResults.results[event.target ? event.target.dataset.index : 0] : //otherwise set it to 0.
   recipeStorage[0].results[0];//if there is no data in the currentSearchResults array then set the selected recipe to the first item in the recipeStorage local storae instance.
-  
+
+  quantity = recipe.num_servings;
+  console.info(quantity);
+
   //if isLoading is true then set the spinner in the DOM.
   // todo -> need to finish this and wrap in own function to be called here.
   if (true) {
@@ -287,16 +365,16 @@ var handleRecipeClick = event => {
         <div className="col s6">
           <p>
             <span class="material-icons">access_time</span>
-            <span>${recipe.total_time_tier && recipe.total_time_tier.display_tier} </span>
+            <span>Prep time: ${recipe.total_time_minutes && recipe.total_time_minutes} minutes</span>
           </p>
           <p>
-            <span id="servings">${recipe.yields && recipe.yields}</span>
+            <span id="servings">Servings: ${setServings(recipe.yields)}</span>
           </p>
         </div>
         <div className="col s6">
           <p>
-            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+            <a class="btn-floating" onclick="handleServings(event)"><i class="material-icons" id="addBtn"  data-quantity="${quantity}">add</i></a>
+            <a class="btn-floating" onclick="handleServings(event)" ><i class="material-icons" id="removeBtn" data-quantity="${quantity}">remove</i></a>
           </p>
         </div>
       </div>
@@ -311,8 +389,15 @@ var handleRecipeClick = event => {
         
           <div class="card-content">
             <ul>
-              ${recipe.sections[0].components && recipe.sections[0].components.map(component => `
-                <li><span class="material-icons">check_circle</span> ${component.raw_text}</li>
+              ${recipe.sections[0].components && 
+                recipe.sections[0].components.map(component => `
+                <li><span class="material-icons">check_circle</span> ${component.raw_text}
+                  <li>
+                    ${component.measurements && 
+                      component.measurements
+                        .map(measurement => parseInt(measurement.quantity) * quantity + ' ' + measurement.unit.name).join("")}
+                  </li>
+                </li>
               `).join("")}
             </ul>
             <a class="btn-floating">
@@ -374,9 +459,9 @@ var handleRecipeClick = event => {
   `;
 };
 
-//setRecipeResults function handles settomg the recipe results after the data is fetched from the API.
+//setRecipeResults function handles setting the recipe results after the data is fetched from the API.
 const setRecipeResults = data => {
-  //set currentSearchResults to data if there is data if theres not then set it to the first item in the recipeStorage local storage instance
+  //set currentSearchResults to the data if there is data, if theres not, then set it to the first item in the recipeStorage local storage instance
   currentSearchResults = data ? data : recipeStorage[0];
   //set the innerHTML of the results element with the new data.
   results.innerHTML = `
@@ -482,8 +567,8 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
-      // "x-rapidapi-key": "",
+      // "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      "x-rapidapi-key": "",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
@@ -492,9 +577,9 @@ const getMeals = async (query) => {
       //setRecipeResults in the DOM with the new data.
       // recipeStorage.push(data);
       // handleLocalStorage("set", "recipes", recipeStorage);
-      setRecipeResults(recipeStorage[0]);
+      setRecipeResults(recipeStorage[3]);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
-      handleRecipeClick(recipeStorage[0]);
+      handleRecipeClick(recipeStorage[3]);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
       setAuth();
