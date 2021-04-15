@@ -550,14 +550,19 @@ const getMeals = async (query) => {
     "method": "GET",
     "headers": {
       "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      // "x-rapidapi-key": "",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
     .then(response => response.json()) //convert the promised response to a json object.
     .then(data => { //now we have access to the json data object
       //setRecipeResults in the DOM with the new data.
+      // recipeStorage.push(data);
+      // handleLocalStorage("set", "recipes", recipeStorage);
+      // setRecipeResults(recipeStorage[3]);
       setRecipeResults(data);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
+      // handleRecipeClick(recipeStorage[3]);
       handleRecipeClick(data);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
