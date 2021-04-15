@@ -142,6 +142,10 @@ const setFavorites = () => {
   if (auth.isUserLoggedIn) {
     //set the favorites container
     groceryList.innerHTML = `
+      <ul id="tabs-swipe-demo" class="tabs">
+        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
+        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      </ul>
       <h4>${auth.emailLoggedIn}'s Favorite Recipe's</h4>
       <ul>
       ${favoriteRecipeStorage.length > 0 ?//check the favoriteRecipeStorage local storage instance
@@ -161,6 +165,10 @@ const setFavorites = () => {
     //if the above condition is not true then run this code block that just does the same thing but checks for 
     //a matching house email account.
     groceryList.innerHTML = `
+      <ul id="tabs-swipe-demo" class="tabs">
+        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
+        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      </ul>
       <h4>Favorite Recipe's</h4>
       <ul>
       ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
@@ -259,6 +267,10 @@ function handleClearShoppingList() {
 //function that sets the groceryList items in the DOM using the updated cart storage array.
 function setShoppingList() {
     groceryList.innerHTML = `
+      <ul id="tabs-swipe-demo" class="tabs">
+        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
+        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      </ul>
       <h2>Grocery List</h2>
       <ul>
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
@@ -337,7 +349,7 @@ var handleRecipeClick = event => {
   currentSearchResults.results[event.target ? event.target.dataset.index : 0] : //otherwise set it to 0.
   recipeStorage[0].results[0];//if there is no data in the currentSearchResults array then set the selected recipe to the first item in the recipeStorage local storae instance.
 
-  quantity = recipe.num_servings;
+  quantity = recipe.num_servings / 2;
 
   let loading = false;
   //if isLoading is true then set the spinner in the DOM.
@@ -358,6 +370,7 @@ var handleRecipeClick = event => {
             <span>Prep time: ${recipe.total_time_minutes && recipe.total_time_minutes} minutes</span>
           </p>
           <p>
+            <span class="material-icons">group</span>
             <span id="servings">Servings: ${setServings(recipe.yields)}</span>
           </p>
         </div>
@@ -454,11 +467,13 @@ const setRecipeResults = data => {
     ${
       currentSearchResults &&
       currentSearchResults.results.map((recipe, index) => `
-        <li class="collection-item avatar" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
-          <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle" style="max-height: 50px;">
-          <p data-index="${index}">${recipe.name}</p>
-          <p data-index="${index}">${recipe.description ? recipe.description.split(0, 28) : "Sorry, no description"}...</p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        <li class="collection-item avatar row" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
+          <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle col s4" style="max-height: 50px;">
+          <div className="col s8">
+            <h6 data-index="${index}">${recipe.name}</h6>
+            <p data-index="${index}" class="col s12">${ recipe.description ? recipe.description.slice(0, 64) + "..." : '' }</p>
+            <a href="#!" class="secondary-content col s4" style="float:right;"><i class="material-icons">grade</i></a>
+          </div>
         </li>
       `)
       .join("")
@@ -470,10 +485,8 @@ const setRecipeResults = data => {
 const setRecipeData = (data) => {
   let index = 0;
   let results = [];
-  if (data.results) { results = data.results && console.info(data); }
-  if (data.target) { console.info(data.target.dataset.index); }
+  if (data.results) { results = data.results; }
 
-  console.log(data)
   centerSection.innerHTML = `
   ${results && results.length > 0 && results.slice(index, 1).map(recipe => `
     <div class="card">
@@ -549,16 +562,16 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      // "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
     .then(response => response.json()) //convert the promised response to a json object.
     .then(data => { //now we have access to the json data object
       //setRecipeResults in the DOM with the new data.
-      setRecipeResults(data);
+      setRecipeResults(recipeStorage[3]);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
-      handleRecipeClick(data);
+      handleRecipeClick(recipeStorage[3]);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
     })
@@ -655,44 +668,38 @@ const setNav = type => {
   switch (type) {
     case "signin":
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
-        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" onclick="switchPage('toLanding')" class="logo" style="float: left; padding: -20%;">
+          <div style="float:right; margin:1% 2%;">
+            <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+            <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+            <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+          </div>
+        </div>
       `;
       break;
     case "signout":
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <span style="float: left; color: darkblue;">${auth.emailLoggedIn}</span>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" style="float: left; padding: -20%;" onclick="switchPage('toLanding')" class="logo">
+          <div style="float:right; margin:1% 2%;">
+            <span style="color: darkblue;">${auth.emailLoggedIn}</span>
+            <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+            <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
+          </div>
+        </div>
       `;
       break;
     default:
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
-        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" onclick="switchPage('toLanding')" class="logo" style="float: left; padding: -20%;">
+            <div style="float:right; margin:1% 2%;">
+              <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+              <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+              <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+            </div>
+        </div>
       `;
       break;
   }
