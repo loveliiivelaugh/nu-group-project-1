@@ -251,7 +251,7 @@ function setShoppingList() {
       <ul>
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
           //otherwise we will return <li>Add some items to your shopping list.</li>
-          cart.length > 0 ? cart.map((item, index) => `
+          cart && cart.length > 0 ? cart.map((item, index) => `
           <li class="row">
             <p class="col s10">${item.raw_text}</p>
             <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteShoppingItem(event)">x</a>
@@ -278,20 +278,20 @@ const handleAddToFavorites = event => {
       alert("You already have that item in your favorites list.");
       return;
     } else {
-    //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
-    favoriteRecipeStorage.push({ 
-      //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
-      userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-      recipeName: recipeName,
-    });
-    //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
-    handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
-    //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
-    // updateFavoriteRecipeStorage();
-    console.info(favoriteRecipeStorage);
+      //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+      favoriteRecipeStorage.push({ 
+        //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+        userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+        recipeName: recipeName,
+      });
+      //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+      handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+      //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+      // updateFavoriteRecipeStorage();
+      console.info(favoriteRecipeStorage);
 
-    //call the setFavorites() function to update the updated favorites in the DOM.
-    setFavorites();
+      //call the setFavorites() function to update the updated favorites in the DOM.
+      setFavorites();
     }
   }) :
   //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
@@ -586,20 +586,20 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      // "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
     .then(response => response.json()) //convert the promised response to a json object.
     .then(data => { //now we have access to the json data object
       //setRecipeResults in the DOM with the new data.
-      setRecipeResults(data);
+      setRecipeResults(recipeStorage[3]);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
-      handleRecipeClick(data);
+      handleRecipeClick(recipeStorage[3]);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
     })  //if there is an error, catch it and log it.
-    .catch(exception => { console.error(exception); });
+    .catch(exception => console.error(exception));
   };
 
 //add an event listener to the searchForm when it is submitted 

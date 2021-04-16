@@ -3,6 +3,7 @@
 #### Group Project 1
 
 * Deployed with [GitHub Pages](https://pages.github.com/)
+
 * [Live Site](https://loveliiivelaugh.github.io/nu-group-project-1/)
 
 ## Description
@@ -27,15 +28,17 @@ pasta, pizza and many more.
 
 
 ## Demo/Screenshot of TastyGen
-<img src="./assets/images/tastyGen_screenshot.png">
 
+[Screenshot1](/assets/images/tastyGen_screenshot.png)
 
+[Gif1](/assets/images/group-project1.gif)
+
+[Gif2](/assets/images/group-project2.gif)
 
 ## Future Implementations
 
-- Share button for a link that a user can share recipes with friends.
-- Text sharing functionality. The user would be able to text their favorite recipes with friends
-  and family members. 
+- Share buttons to be able to quickly share recipes with friends.
+- Paid feature, Texting functionality. The user would be able to text or email their newly generated grocery list to themselves from the app. 
 - Paid version, user would be able to add the ingredients to their shopping cart and get the 
   ingredients delivered to their house directly. 
 
