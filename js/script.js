@@ -277,9 +277,6 @@ var handleRecipeClick = event => {
     </div>
     `;
   }
-  let recipe = currentSearchResults.results ? currentSearchResults.results[index] : recipeStorage[0].results[0];
-console.log(recipe)
-    
   //when it is loaded set the innerHTML of the center section with the updated searched recipe data.
   centerSection.innerHTML =`
     <div class="card">
