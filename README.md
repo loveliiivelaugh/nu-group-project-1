@@ -28,13 +28,13 @@ pasta, pizza and many more.
 
 ## Demo/Screenshot of TastyGen
 
-[Screenshot1](/assets/images/tastyGen_screenshot.png)
+![Screenshot1](/assets/images/tastyGen_screenshot.png)
 
-[Screenshot2](/assets/images/tastyGen_screenshot2.png)
+![Screenshot2](/assets/images/tastyGen_screenshot2.png)
 
-[Gif1](/assets/images/group-project1.gif)
+![Gif1](/assets/images/group-project1.gif)
 
-[Gif2](/assets/images/group-project2.gif)
+![Gif2](/assets/images/group-project2.gif)
 
 ## Future Implementations
 
