@@ -395,7 +395,7 @@ var handleRecipeClick = event => {
           </p>
           <p>
             <span class="material-icons">group</span>
-            <span id="servings">Servings: ${setServings(recipe.yields)}</span>
+            <span id="servings">Servings: ${recipe.yields}</span>
           </p>
         </div>
         <div className="col s6">
@@ -586,22 +586,20 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      // "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
+      "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
     .then(response => response.json()) //convert the promised response to a json object.
     .then(data => { //now we have access to the json data object
       //setRecipeResults in the DOM with the new data.
-      setRecipeResults(recipeStorage[3]);
+      setRecipeResults(data);
       //call the handleRecipeClick with the new data so we have an initial item onPageLoad instead of empty containers.
-      handleRecipeClick(recipeStorage[3]);
+      handleRecipeClick(data);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
-    })
-    .catch(exception => {
-      console.error(exception); //if there is an error, catch it and log it.
-    });  
+    })  //if there is an error, catch it and log it.
+    .catch(exception => { console.error(exception); });
   };
 
 //add an event listener to the searchForm when it is submitted 
@@ -784,8 +782,6 @@ const handleSubmit = (event) => {
       //set the userStorage array to localstorage using the handleLocalStorage wrapper function
       handleLocalStorage("set", "users", userStorage);
       updateUserStorage();
-       //if user is currently logged in, log them out before logging in the new person using setAuth().
-      setAuth();
       //assign the value of token to a new randomly generated string using the generateToken function
       token = generateToken();
       //set the logged in user in the auth local storage using the handleLocalStorage wrapper function
@@ -830,8 +826,6 @@ const handleSubmit = (event) => {
               email: user.email,
               token: token
             };
-            //update auth status with setAuth()
-            setAuth();
             //update the data in the favorites section in the DOM //todo <-- Fix this.
             // setFavorites();
             setNav("signout");
