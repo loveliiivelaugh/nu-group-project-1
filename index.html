@@ -27,20 +27,18 @@
       justify-content: center;
       align-items: center;
       margin: auto;
-      margin-top: 10%;
       display: none;
+      margin-top: 10%;
     }
 
     #landing-page {
       height: 100vh;
       display: block;
-      margin-top: 10%;
     }
 
     #dashboard-page {
       height: 100vh;
       display: block;
-      margin-top: 10%;
       display: none;
     }
 
@@ -52,22 +50,28 @@
     #grocery-list ul {
       overflow-y: scroll;
       max-height: 90vh;
+      padding-right: 6%;
     }
 
     #nav {
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 10;
+      height: 12vh;
+    }
+
+    .logo {
+      margin: 2%;
+      height: 60px;
     }
 
   </style>
 
   <body>
 
-    <div>
-      <nav id="nav"></nav>
-    </div>
+    <nav id="nav"></nav>
+
     <!---Start of Landing Page-->
       <section class="sec" id="landing-page">
         <div class="content">
@@ -103,19 +107,20 @@
         
     <!-- Start of Dashboard Page -->
     <div id="dashboard-page" style="padding: 5%;">    
-      <header class="col s1">
-        <form id="foodSearchForm">
+        <form id="foodSearchForm" style="display:inline;">
           <div class="input-field">
-            <input 
+            <input
               id="search" 
               placeholder="Search chicken, beef or pasta" 
               name="foodItem" 
               type="text" 
               required
-            ><button class="searchBtn" type="submit">Search</button>
+            >
+          </div>
+          <div>
+            <button class="searchBtn" type="submit">Search</button>
           </div>
         </form>
-      </header>
 
       <div class="row">
         <section id="results" class="col s3"></section>
@@ -140,7 +145,6 @@
       <!-- End of Dashboard Page -->
 
     </div>
-
 
     </div>
     <script type="text/javascript">
