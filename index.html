@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Landing Page</title>
+    <title>TastyGen</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--Import Google Icon Font-->
@@ -26,217 +26,135 @@
       width: 100%;
       justify-content: center;
       align-items: center;
-      display: block;
       margin: auto;
+      display: none;
       margin-top: 10%;
     }
 
     #landing-page {
       height: 100vh;
-      margin-top: 10%;
+      display: block;
     }
 
     #dashboard-page {
       height: 100vh;
-      margin-top: 10%;
+      display: block;
+      display: none;
     }
 
     #results ul {
       overflow-y: scroll;
-      max-height: 100vh;
+      max-height: 130vh;
     }
 
     #grocery-list ul {
       overflow-y: scroll;
-      max-height: 90vh;
+      max-height: 130vh;
+      padding-right: 6%;
     }
 
     #nav {
-      position: fixed;
+      position: sticky;
       top: 0;
       width: 100%;
       z-index: 10;
+      height: 12vh;
+    }
+
+    .logo {
+      margin: 2%;
+      height: 60px;
     }
 
   </style>
 
   <body>
-    <div>
-      <nav id="nav" class="right-align light-blue lighten-4">
-      </nav>
-    </div>
+
+    <nav id="nav"></nav>
+
     <!---Start of Landing Page-->
-      <section class="sec">
+      <section class="sec" id="landing-page">
         <div class="content">
           <div class="textBox">
             <h2>Come Get Your Next Dinner Idea<br><span>Here!</span></h2>
             <p>Have an idea of what you would like to make for dinner but dont have a recipe to go off of? Come explore our recipe options to cook for your loved ones tonight.</p>
-            <a href="#">View Some Dinner Ideas</a>
+            <a href="#" onclick="switchPage('toDashboard')">View Some Dinner Ideas</a>
           </div>
           <div class="imgBox">
-            <img src="logo.png" class="food">
+            <img src="logo.png" class="food" alt="some food image">
           </div>
         </div>
-         <ul class="thumb">
-           <li><img src="assets/images/foodidea1.png" onclick="imgSlider('assets/images/foodidea1.png');changeBgColor('#3DDAD8')"></li>
-           <li><img src="assets/images/foodidea3.jpeg" onclick="imgSlider('assets/images/foodidea3.jpeg');changeBgColor('#AED9DA')"></li>
-           <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
-         </ul>
-      </section>
-   
-
-
-
-  </div>
-
-        <!-- End of Landing Page -->
-        
-        <!-- Start of Authentication Pages -->
-        <div id="auth-page" class="container center-align">
-          <center>
-            <div class="card large row container center-align">
-              <div class="card-content">
-                <form id="authForm" class="form col s12"></form> 
-              </div>
-            </div>
-          </center>
-        </div>
-        <!-- End of Authentication Pages -->
-        
-        
-        <!-- Start of Dashboard Page -->
-        <div id="dashboard-page" class="container">    
-          <header>
-            <div>
-              <form id="foodSearchForm">
-                <div class="input-field">
-                  <input id="search" name="foodItem" type="search" required>
-                  <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                  <i class="material-icons">close</i>
-                </div>
-                <button id="foodSearchFormBtn" class="btn right" type="submit">Search</button>
-              </form>
-            </div>
-          </header>
-          <div class="row">
-            <section id="results" class="col s3">
-              <h2>Grocery List</h2>
-              <ul class="collection">
-                <li class="collection-item avatar">
-                  <img src="" alt="Image." class="circle">
-                  <span class="title">Pizza</span>
-                  <p>Under 30 Min <br>
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle">folder</i>
-                  <span class="title">Pasta</span>
-                  <p>Under 30 Min<br>
-                    
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle green">insert_chart</i>
-                  <span class="title">Chicken</span>
-                  <p>Under 30 Min <br>
-                    
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-                <li class="collection-item avatar">
-                  <i class="material-icons circle red">play_arrow</i>
-                  <span class="title">Salad</span>
-                  <p>Under 30 Min <br>
-                  </p>
-                  <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-                </li>
-              </ul>
-            </section>
-
-      <section id="center-section" class="col s6">
-
-
-        <div class="preloader-wrapper big active">
-          <div class="spinner-layer spinner-blue">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div><div class="gap-patch">
-              <div class="circle"></div>
-              </div><div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="card">
-
-          <div class="card-image">
-            <img src="" alt="Image of pizza.">
-            <span class="card-title">Card Title</span>
-          </div>
-
-          <!-- Start of time and servings amount section -->
-          <div class="card-content">
-            <p><span class="material-icons">access_time</span>
-              <span>30 Minutes </span>Servings <span id="servings">0</span>
-              <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-              <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
-            </p>
-            <!-- <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons" id="favoriteBtn">favorite</i></a> -->
-          </div>
-          <!-- Start of time and servings amount section -->
-
-          <!-- Start of Ingredient section -->
-            <div class="card">
-              <div class="card-image"></div>
-              <div class="card-content">
-                <ul>
-                  <li><span class="material-icons">check_circle</span> Store bought pizza crust or refrigerated crust</li>
-                  <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
-                  <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
-                  <li><span class="material-icons">check_circle</span>1 Store bought pizza crust or refrigerated crust</li>
-                  <li><span class="material-icons">check_circle</span>1 Shredded Chicken</li>
-                  <li><span class="material-icons">check_circle</span>1 Orange Bell Pepper</li>
-                </ul>
-                <a class="btn-floating"><i class="material-icons" id="cartBtn">shopping_cart</i></a>
-              </div>
-            </div>
-            <!-- End of Ingredient section -->
-        </div>
-
-      </section>
-
-      <section id="grocery-list" class="col s3">
-        <button onclick="toggleGroceryList('groceries')">Grocery List</button>
-        <button onclick="toggleGroceryList('favorites')">Favorite Recipe's</button>
-        <h2>Grocery List</h2>
-        <ul class="collection">
-          <li class="collection-item avatar">
-            <i class="material-icons circle green">insert_chart</i>
-            <span class="title">Groceries</span>
-            <p>Add some items to your shopping list</p>
-            <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
-          </li>
+        <ul class="thumb">
+          <li><img src="assets/images/foodidea1.png" onclick="imgSlider('assets/images/foodidea1.png');changeBgColor('#3DDAD8')"></li>
+          <li><img src="assets/images/foodidea3.jpeg" onclick="imgSlider('assets/images/foodidea3.jpeg');changeBgColor('#AED9DA')"></li>
+          <li><img src="assets/images/foodidea2.jpeg" onclick="imgSlider('assets/images/foodidea2.jpeg');changeBgColor('#2A93D5')"></li>
         </ul>
       </section>
+        <!-- End of Landing Page -->
+        
+    <!-- Start of Authentication Pages -->
+    <div id="auth-page" class="container center-align">
+      <center>
+        <div class="card large row container center-align">
+          <div class="card-content">
+            <form id="authForm" class="form col s12"></form> 
+          </div>
+        </div>
+      </center>
+    </div>
+    <!-- End of Authentication Pages -->
+        
+        
+    <!-- Start of Dashboard Page -->
+    <div id="dashboard-page" style="padding: 5%;">    
+        <form id="foodSearchForm" style="display:inline;">
+          <div class="input-field">
+            <input
+              id="search" 
+              placeholder="Search chicken, beef or pasta" 
+              name="foodItem" 
+              type="text" 
+              required
+            >
+          </div>
+          <div>
+            <button class="searchBtn" type="submit">Search</button>
+          </div>
+        </form>
+
+      <div class="row">
+        <section id="results" class="col s3"></section>
+
+        <section id="center-section" class="col s6">
+          <!-- Spinner while data is loading -->
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="grocery-list" class="col s3"></section>
+      </div>
+      <!-- End of Dashboard Page -->
+
     </div>
 
-  </div>
-
-
     </div>
-    </body>
     <script type="text/javascript">
-    function imgSlider(anything){
-      document.querySelector('.food').src = anything;
-    }
-    function changeBgColor(color){
-      const sec = document.querySelector('.sec');
-      sec.style.background = color;
-    }
+      function imgSlider(anything){
+        document.querySelector('.food').src = anything;
+      }
+      function changeBgColor(color){
+        const sec = document.querySelector('.sec');
+        sec.style.background = color;
+      }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./js/script.js" async defer></script>

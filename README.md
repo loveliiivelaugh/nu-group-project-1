@@ -1,90 +1,65 @@
-# Recipe Search and Save
+# TastyGen
 ### Northwestern University Coding Bootcamp
 #### Group Project 1
-
-## Description
-
-## Screenshots
-
-![Pseudo Dashboard](/assets/images/dashboard-pseudo.jpg)
-
-![Pseudo Landing](/assets/images//landing-pseudo.jpg)
-## Demo
-
-## Deployment
 
 * Deployed with [GitHub Pages](https://pages.github.com/)
 
 * [Live Site](https://loveliiivelaugh.github.io/nu-group-project-1/)
 
-## Instructions
+## Description
 
-1. Start project and layout folder structure.
+TastyGen is an application created for a user that is interested in finding
+new and unique recipes. This application was created with the intention of making the website 
+as user friendly as possible. The user can simply make an account using their email and once
+they create an account they are able to search for hundreds of recipes related to chicken, beef,
+pasta, pizza and many more.
 
-2. Planning our concept and gathering our requirements.
+1. The user is greeted with the home page, the user is encouraged to find their Next Dinner Idea.
+2. To go to the recipes section, the user can either click on “Dinner Ideas” or “Home” button. 
+     The user can even register for a free account if they click on the register button. 
+3. The user would search by typing in to the top search bar for something like 'chicken'.
+4. The user will see a list of different recipes populate in the main section of the page.
+5. The user can click on the recipe that they like the most and this will reveal all the
+  the ingredients needed for that specific recipe. 
+6. The user can add or deduct the amount of servings needed and add the ingredients to 
+  their shopping cart.
+7. The user can also add their favorite recipes to a personal favorite list if they are registered 
+     with an account.
 
-  - Building a recipe search app.
+## Demo/Screenshot of TastyGen
 
-  - Using Materialize w/grid layout for styling library
+![Screenshot1](/assets/images/tastyGen_screenshot.png)
 
-  - Featuring at least 2 pages, 1 landing, 1 dashboard.
+![Screenshot2](/assets/images/tastyGen_screenshot2.png)
 
-  - Using color scheme 
-``` 
-  #AED9DA (GRAY), 
-  #3DDAD8 (TURQOISE), 
-  #2A93D5 (BLUE), 
-  #135589 (NAVY)
-```
+![Gif1](/assets/images/group-project1.gif)
 
-3. Starting with `index.html` use semantic tags to layout base stucture of app.
+![Gif2](/assets/images/group-project2.gif)
 
-4. Basically need a header then a main with 3 columns --> 3-col, 6-col, 3-col
+## Future Implementations
+
+- Share buttons to be able to quickly share recipes with friends.
+- Paid feature, Texting functionality. The user would be able to text or email their newly generated grocery list to themselves from the app. 
+- Paid version, user would be able to add the ingredients to their shopping cart and get the 
+  ingredients delivered to their house directly. 
+
+## Technologies Used
+
+- HTML, JavaScript, CSS
+- Materialize (https://materializecss.com/) 
+- Tasty API (https://rapidapi.com/apidojo/api/tasty)
+- GitHub (https://www.GitHub.com/) 
+- Trello (https://www.trello.com) 
 
 
-## Todo's
-### JavaScript
+## Training Tools
 
-1. Add full screen windows and window transitions for all 3 auth pages.
+- [Reviewing Pull Requests](https://lab.github.com/githubtraining/reviewing-pull-requests)
+- [Managing Merge Conflicts](https://lab.github.com/githubtraining/managing-merge-conflicts)
 
-2. Fix bug thats preventing the pages from updating when they are supposed to instead of hard refreshing to see when auth and favorites list has been updated etc...
-
-3. Remove duplicates from Favorites list.
-
-4. Update to make use of session tokens when logged in as well as input validation and session validation
-
-### HTML
-
-1. Needs pseudo code, original plan and layout.
-
-2. All html elments still need to be written.
-
-### CSS
-
-1. Using Materialize styling library. Establish layout.
-
-2. Apply Materialize styling to components.
-
-## Resources
-
-#### API's
-
-* [Tasty API](https://rapidapi.com/apidojo/api/tasty)
-
-#### Style Library
-
-* [MaterializeCSS](https://materializecss.com/getting-started.html)
-
-#### GitHub Team Training
-
-* [Reviewing Pull Requests](https://lab.github.com/githubtraining/reviewing-pull-requests)
-
-* [Managing Merge Conflicts](https://lab.github.com/githubtraining/managing-merge-conflicts)
 
 ## Credits
 
-1. Michael Woodward - working on my own branch
-
-2. Karina
-
-3. Angel - github test
+- Michael Woodward
+- Karina Ayala
+- Angel Flores

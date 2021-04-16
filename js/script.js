@@ -24,8 +24,10 @@ const handleLocalStorage = (action, nameOfStorage, data) => {
       return JSON.parse(localStorage.getItem(nameOfStorage));
     case "set":
       return localStorage.setItem(nameOfStorage, JSON.stringify(data));
+    case "remove":
+      return localStorage.removeItem(nameOfStorage);
     case "clear":
-      return localStorage.clear(nameOfStorage);
+      return localStorage.clear();
     default:
       break;
   }
@@ -56,10 +58,7 @@ const showUpdatedStorages = () => console.info({
 });
 
 let currentSearchResults = [];
-let loading = false;
-// const updateLoading = isLoading => loading = isloading;
-
-const handleAuthButtons = ( ) => {};
+let quantity = 0.5;
 
 /**
  * TABLE OF FUNCTIONS
@@ -102,26 +101,26 @@ const handleAuthButtons = ( ) => {};
 const switchPage = page => {
   switch (page) {
     case "toDashboard":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from landing page or auth page to dashboard page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("landing-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "block";
       break;
     case "toLanding":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from auth page to landing page
       document.getElementById("auth-page").style.display = "none";
       document.getElementById("dashboard-page").style.display = "none";
       document.getElementById("landing-page").style.display = "block";
       break;
     case "toAuth":
-      showUpdatedStorages();
+      // showUpdatedStorages();
       //switch from dashboard page or landing page to auth page
       if (auth.isUserLoggedIn) { //if we are logged in route to dashboard
         document.getElementById("landing-page").style.display = "none";
-        document.getElementById("dashboard-page").style.display = "block";
-        document.getElementById("auth-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "none";
+        document.getElementById("auth-page").style.display = "block";
       } else {
         document.getElementById("landing-page").style.display = "none";
         document.getElementById("dashboard-page").style.display = "none";
@@ -142,32 +141,76 @@ const setFavorites = () => {
   //if user is logged in
   if (auth.isUserLoggedIn) {
     //set the favorites container
-    favoritesContainer.innerHTML = `
-      <h3>${auth.emailLoggedIn}'s Favorite Recipe's</h3>
-      ${//check the favoriteRecipeStorage local storage instance
+    groceryList.innerHTML = `
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent row">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
+      </ul>
+      <h4>${auth.emailLoggedIn}'s Favorite Recipe's</h4>
+      <ul>
+      ${favoriteRecipeStorage.length > 0 ?//check the favoriteRecipeStorage local storage instance
         favoriteRecipeStorage //filter it by checking if the email from the favorited item matched the email of the user logged in.
         .filter(favorite => favorite.userEmail === auth.emailLoggedIn)//after filtering map the results into a list item.
-        .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
-        .join("")//removes the commas left over from joining the string from mapping an array.
+        .map((favorite, index) => `
+          <li class="row">
+            <p class="col s10">${favorite.recipeName && favorite.recipeName}</p> 
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteFavoritesItem(event)">x</a>
+          </li>
+          `)
+        .join("") : //removes the commas left over from joining the string from mapping an array.
+        `<li>Add some items to your favorites list.</li>`
       }
+      </ul>
+      <button class="btn red white-text" onclick="handleClearFavorites(event)">Clear List</button>
     `;
   }
   else {
     //if the above condition is not true then run this code block that just does the same thing but checks for 
     //a matching house email account.
-    favoritesContainer.innerHTML = `
-      ${favoriteRecipeStorage
+    groceryList.innerHTML = `
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent row">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
+      </ul>
+      <h4>Favorite Recipe's</h4>
+      <ul>
+      ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
-        .map(favorite => `<li>${favorite.recipeName ? favorite.recipeName : "Add some favorites!"}</li>`)
-        .join("")
+        .map((favorite, index) => `
+          <li class="row">
+            <p class="col s10">${favorite.recipeName && favorite.recipeName}</p> 
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteFavoritesItem(event)">x</a>
+          </li>
+          `)
+        .join("") :
+        `<li>Add some items to your favorites list.</li>`
       }
+      </ul>
+      <button class="btn red white-text" onclick="handleClearFavorites(event)">Clear List</button>
     `;
   }
 };
 
+//deleteFavoritesItem(), function that deletes the favorites item from the list
+const deleteFavoritesItem = event => {
+  let index = parseInt(event.target.dataset.index)
+  favoriteRecipeStorage.splice(index, 1);
+  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+  updateFavoriteRecipeStorage();
+  setFavorites();
+};
+
+//handleClearFavoritesList() handles clearing the entire favorites list
+const handleClearFavorites = () => {
+  //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
+  handleLocalStorage("remove", "favoriteRecipes");
+  updateFavoriteRecipeStorage();
+  //and then update the shoppingList()
+  setFavorites();
+};
+
 //toggleGroceryList() handles toggling the grocery list and favorites tab
-const toggleGroceryList = (toggle) => {
-  //todo -> this function is not done yet needs to be finished.
+const toggleGroceryList = toggle => {
     switch (toggle) {
       case "groceries":
         setShoppingList();
@@ -181,55 +224,92 @@ const toggleGroceryList = (toggle) => {
 };
 
 //deleteShoppingItem(), function that deletes the shopping item from the list
-//todo -> this function is not done yet needs to be finished.
-function deleteShoppingItem(event) { console.info(event.target.dataset.index, cart); }
-
-//handleAddToFavorites() function handles adding a seleted item to the favorites list.
-const handleAddToFavorites = event => {
-  //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
-  favoriteRecipeStorage.push({ 
-    //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
-    userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-    recipeName: event.target.data.recipe,
-  });
-  //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
-  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
-  //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
-  updateFavoriteRecipeStorage();
-  //call the setFavorites() function to update the updated favorites in the DOM.
-  setFavorites();
+const deleteShoppingItem = event => {
+  let index = parseInt(event.target.dataset.index)
+  cart.splice(index, 1);
+  handleLocalStorage("set", "cart", cart);
+  updateCart();
+  setShoppingList();
 };
 
 //handleClearShoppingList() handles clearing the entire shopping list
-function handleClearShoppingList(event) {
+function handleClearShoppingList() {
   //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
-  handleLocalStorage("clear", "cart");
+  handleLocalStorage("remove", "cart");
   //and then update the shoppingList()
+  cart && updateCart();
   setShoppingList();
 }
 
 //function that sets the groceryList items in the DOM using the updated cart storage array.
 function setShoppingList() {
     groceryList.innerHTML = `
-      <div class="card-tabs">
-        <ul class="tabs tabs-fixed-width">
-          <li class="tab"><a href="#test4">Grocery List</a></li>
-          <li class="tab"><a class="active" href="#test5">Favorite Recipe's</a></li>
-        </ul>
-      </div>
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent" style="margin: 0 5%;">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
+      </ul>
       <h2>Grocery List</h2>
       <ul>
         ${//ternary conditional to check if cart has items (cart.length > 0) then map out the items in the cart
           //otherwise we will return <li>Add some items to your shopping list.</li>
-          cart.length > 0 ? cart.map(item => item.map((item, index) => `
-          <li>
-            ${item.raw_text} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteShoppingItem(event)">X</button>
+          cart && cart.length > 0 ? cart.map((item, index) => `
+          <li class="row">
+            <p class="col s10">${item.raw_text}</p>
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteShoppingItem(event)">x</a>
           </li>
-        `).join("")).join("") : `<li>Add some items to your shopping list.</li>`}
+        `).join("") : `<li>Add some items to your shopping list.</li>`}
       </ul>
       <button class="btn red white-text" onclick="handleClearShoppingList(event)">Clear List</button>
     `;
 }
+
+//! This function needs to be rewritten...
+//handleAddToFavorites() function handles adding a seleted item to the favorites list.
+const handleAddToFavorites = event => {
+  let recipeName = event.target.dataset.recipe;
+  let userEmail = auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com";
+
+  console.info(event.target.dataset.recipe, favoriteRecipeStorage);
+  
+  favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage.forEach(favoriteRecipe => {
+    if (
+      favoriteRecipe.recipeName === recipeName && 
+      favoriteRecipe.userEmail === userEmail
+    ) {
+      alert("You already have that item in your favorites list.");
+      return;
+    } else {
+      //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+      favoriteRecipeStorage.push({ 
+        //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+        userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+        recipeName: recipeName,
+      });
+      //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+      handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+      //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+      // updateFavoriteRecipeStorage();
+      console.info(favoriteRecipeStorage);
+
+      //call the setFavorites() function to update the updated favorites in the DOM.
+      setFavorites();
+    }
+  }) :
+  //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+  favoriteRecipeStorage.push({ 
+    //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+    userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+    recipeName: recipeName,
+  });
+  //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+  //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+  // updateFavoriteRecipeStorage();
+  console.info(favoriteRecipeStorage);
+
+  //call the setFavorites() function to update the updated favorites in the DOM.
+  setFavorites();
+};
 
 //function to handle adding a selected item to the shopping list.
 function handleAddToShopping(event) {
@@ -242,16 +322,50 @@ function handleAddToShopping(event) {
         //if the name of one of those items is equal to the recipe name grabbed from the datast attr
         if ( currentSearchResults.results[i].name === recipeName ) {
           //then push each of the ingredients from the selected item into the cart storage array
-          cart.push(currentSearchResults.results[i].sections[0].components);
-          //set the updated cart storage array in localstorage using the handle localstorage wrapper.
+          currentSearchResults.results[i].sections[0].components.forEach(component => cart.push(component));
+          //set the updated cart storage array in localstorage using the handle localstorage wrapper function.
           handleLocalStorage("set", "cart", cart);
-          //call the setShoppingList() to update the Shopping List in the DOM with the update cart storage data.
+          //call the setShoppingList() to update the Shopping List in the DOM with the updated cart storage data.
           setShoppingList();
         }
       }
   }
 }
 
+const handleServings = event => {
+  event.target.id === "addBtn" && (quantity += 1);
+  event.target.id === "removeBtn" && quantity > 1 && (quantity -= 1);
+  console.info("Servings: " + quantity);
+};
+
+const setServings = yields =>
+  `${yields &&
+    parseInt((yields)
+      .split(" ")[1]
+      .replace(/[^0-9]/g, "")
+      .split('')[0]) * quantity
+    } - 
+  ${yields &&
+    parseInt((yields)
+      .split(" ")[1]
+      .replace(/[^0-9]/g, "")
+      .split('')[1]) * quantity
+    }`;
+
+
+const setSpinner = () => centerSection.innerHTML = `
+  <div class="preloader-wrapper big active">
+    <div class="spinner-layer spinner-blue">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+        <div class="circle"></div>
+        </div><div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+  `;
 //function that handles when a recipe item returned from the API is clicked.
 var handleRecipeClick = event => {
   //ternary conditional that assigns the result of the condition to the recipe variable.
@@ -260,23 +374,12 @@ var handleRecipeClick = event => {
   currentSearchResults.results[event.target ? event.target.dataset.index : 0] : //otherwise set it to 0.
   recipeStorage[0].results[0];//if there is no data in the currentSearchResults array then set the selected recipe to the first item in the recipeStorage local storae instance.
 
+  quantity = recipe.num_servings / 2;
+
+  let loading = false;
   //if isLoading is true then set the spinner in the DOM.
-  // todo -> need to finish this and wrap in own function to be called here.
-  if (true) {
-    centerSection.innerHTML = `
-    <div class="preloader-wrapper big active">
-      <div class="spinner-layer spinner-blue">
-        <div class="circle-clipper left">
-          <div class="circle"></div>
-        </div><div class="gap-patch">
-          <div class="circle"></div>
-          </div><div class="circle-clipper right">
-          <div class="circle"></div>
-        </div>
-      </div>
-    </div>
-    `;
-  }
+  if (loading) { setSpinner(); }
+    
   //when it is loaded set the innerHTML of the center section with the updated searched recipe data.
   centerSection.innerHTML =`
     <div class="card">
@@ -289,16 +392,17 @@ var handleRecipeClick = event => {
         <div className="col s6">
           <p>
             <span class="material-icons">access_time</span>
-            <span>${recipe.total_time_tier && recipe.total_time_tier.display_tier} </span>
+            <span>Prep time: ${recipe.total_time_minutes ? recipe.total_time_minutes + " minutes" : ""}</span>
           </p>
           <p>
-            <span id="servings">${recipe.yields && recipe.yields}</span>
+            <span class="material-icons">group</span>
+            <span id="servings">${recipe.yields}</span>
           </p>
         </div>
         <div className="col s6">
           <p>
-            <a class="btn-floating"><i class="material-icons" id="addBtn">add</i></a>
-            <a class="btn-floating"><i class="material-icons" id="removeBtn">remove</i></a>
+            <a class="btn-floating" onclick="handleServings(event)"><i class="material-icons" id="addBtn" data-quantity="${quantity}">add</i></a>
+            <a class="btn-floating" onclick="handleServings(event)" ><i class="material-icons" id="removeBtn" data-quantity="${quantity}">remove</i></a>
           </p>
         </div>
       </div>
@@ -308,14 +412,15 @@ var handleRecipeClick = event => {
           <span class="card-title activator grey-text text-darken-4">
             ${recipe.name}<i class="material-icons right">more_vert</i>
           </span>
-          <p>${recipe.description && recipe.description}<a href="#">This is a link</a></p>
+          <p>${recipe.description && recipe.description}</p>
         </div>
         
           <div class="card-content">
             <ul>
-              ${recipe.sections[0].components && recipe.sections[0].components.map(component => `
-                <li><span class="material-icons">check_circle</span> ${component.raw_text}</li>
-              `).join("")}
+              ${recipe.sections[0].components && 
+                recipe.sections[0].components.map(component => `
+                  <li><span class="material-icons">check_circle</span> ${component.raw_text}</li>
+                `).join("")}
             </ul>
             <a class="btn-floating">
               <i 
@@ -327,16 +432,15 @@ var handleRecipeClick = event => {
             </a>
             <a 
               class="btn-floating waves-effect waves-light red right-align" 
-              onclick="handleAddToFavorites(event)" 
-              data-recipe="${recipe.name}" 
+              onclick="handleAddToFavorites(event)"  
               data-id="${1234}"
             >
-              <i class="material-icons" id="favoriteBtn">favorite</i>
+              <i class="material-icons" id="favoriteBtn" data-recipe="${recipe.name}">favorite</i>
             </a>
           </div>
 
       <div class="card-reveal">
-        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+        <span class="card-title grey-text text-darken-4">${recipe.name}<i class="material-icons right">close</i></span>
         <h3>Nutrition</h3>
         <table>
           <tr>
@@ -377,22 +481,24 @@ var handleRecipeClick = event => {
   `;
 };
 
-//setRecipeResults function handles settomg the recipe results after the data is fetched from the API.
+//setRecipeResults function handles setting the recipe results after the data is fetched from the API.
 const setRecipeResults = data => {
-  //set currentSearchResults to data if there is data if theres not then set it to the first item in the recipeStorage local storage instance
+  //set currentSearchResults to the data if there is data, if theres not, then set it to the first item in the recipeStorage local storage instance
   currentSearchResults = data ? data : recipeStorage[0];
   //set the innerHTML of the results element with the new data.
   results.innerHTML = `
-    <h3>Results list items</h3>
+    <h3>Recipes</h3>
     <ul>
     ${
       currentSearchResults &&
       currentSearchResults.results.map((recipe, index) => `
-        <li class="collection-item avatar" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
-          <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle" style="max-height: 50px;">
-          <p data-index="${index}">${recipe.name}</p>
-          <p data-index="${index}">${recipe.description ? recipe.description.split(0, 28) : "Sorry, no description"}...</p>
-          <a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
+        <li class="collection-item avatar row" onclick="handleRecipeClick(event)" data-recipe="${recipe.name}">
+          <img src="${recipe.thumbnail_url}" alt="recipe thumbnail" thumbnail class="circle col s4" style="max-height: 50px;">
+          <div className="col s8">
+            <h6 data-index="${index}">${recipe.name}</h6>
+            <p data-index="${index}" class="col s12">${ recipe.description ? recipe.description.slice(0, 64) + "..." : '' }</p>
+            <a href="#!" class="secondary-content col s4" style="float:right;"><i class="material-icons">grade</i></a>
+          </div>
         </li>
       `)
       .join("")
@@ -401,13 +507,11 @@ const setRecipeResults = data => {
   `;
 };
 
-const setRecipeData = (data) => {
+const setRecipeData = data => {
   let index = 0;
   let results = [];
-  if (data.results) { results = data.results && console.info(data); }
-  if (data.target) { console.info(data.target.dataset.index); }
+  if (data.results) { results = data.results; }
 
-  console.log(data)
   centerSection.innerHTML = `
   ${results && results.length > 0 && results.slice(index, 1).map(recipe => `
     <div class="card">
@@ -415,6 +519,7 @@ const setRecipeData = (data) => {
       <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
       <button onclick="handleAddToFavorites(event)" data-recipe="${recipe.name}" data-id="${1234}">Add to Favorites</button>
       <h3>Nutrition</h3>
+      ${recipe.nutrition ? `
       <table>
         <tr>
           <th>Calories</th>
@@ -424,7 +529,6 @@ const setRecipeData = (data) => {
           <th>Protein</th>
           <th>Sugar</th>
         </tr>
-        ${recipe.nutrition && `
           <tr>
           <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
           <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
@@ -433,7 +537,7 @@ const setRecipeData = (data) => {
           <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
           <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
         </tr>
-        `}
+        ` : "Sorry no nutrition data is available."}
       </table>
       <h3>Instructions</h3>
       <ul>
@@ -474,13 +578,8 @@ const setRecipeData = (data) => {
   }`;
 };
 
-// handleRecipeClick(event);
-// setRecipeResults(event)
-
 //getMeals() function handles fetching the meal data from the API.
 const getMeals = async (query) => {
-  //set loading to true while we fetch the data triggering the spinner to show in the DOM.
-  // updateLoading(true);
   //set a dynamic url to a variable passing in the query from the search form.
   const url = `https://tasty.p.rapidapi.com/recipes/list?from=0&size=40&tags=under_30_minutes&q=${query}`;
 
@@ -488,7 +587,7 @@ const getMeals = async (query) => {
   await fetch(url, {
     "method": "GET",
     "headers": {
-      "x-rapidapi-key": "",
+      "x-rapidapi-key": "f0fe1e6a40msh09227785bf24521p14c96ajsndd8583834371",
       "x-rapidapi-host": "tasty.p.rapidapi.com"
     }
     })
@@ -500,15 +599,8 @@ const getMeals = async (query) => {
       handleRecipeClick(data);
       //setShoppingList() to update the Shopping List with any saved grocery list items.
       setShoppingList();
-      setAuth();
-      //set loading to false
-      // updateLoading(false);
-    })
-    .catch(exception => {
-      console.error(exception); //if there is an error, catch it and log it.
-      //update loading to false.
-      // updateLoading(false);
-    });  
+    })  //if there is an error, catch it and log it.
+    .catch(exception => console.error(exception));
   };
 
 //add an event listener to the searchForm when it is submitted 
@@ -521,33 +613,7 @@ searchForm.addEventListener('submit', function(event){
 });
 
 
-
 //AUTHENTICATION  //code below is for authentication
-//assign global variable to grab the elements needed in the DOM.
-console.info(nav)
-
-// ) => {//DATA MODELS
-  // userStorage == [
-    // {
-  //   email: '',
-  //   password: ''
-    // }, 
-    // {
-
-    // } //etc...
-  // ];
-  // auth == {
-  //   isUserLoggedIn: Boolean,
-  //   authToken: ''
-  // };
-  // recipeStorage == [
-  //   {
-  //     results: {}, //a stored default recipe search results (chicken)
-  //   }, //etc...
-  // ]
-// };
-
-
 //i dont remember why i sepearated these into their own functions but they all just forward to the same handleSubmit() function.
 const handleLogin = event => handleSubmit(event);
 const handleLogout = event => handleSubmit(event);
@@ -556,7 +622,6 @@ const handleRegister = event => handleSubmit(event);
 //setAuthForm() updates the auth form on the auth page every time there is an auth change or update.
 const setAuthForm = (type) => {
   //utilizes switch function to check the type is equal to signin, signout, or register.
-  console.log("Am I being clicked?", type)
   switch (type) {
     case "signin":
       authForm.innerHTML = `
@@ -607,11 +672,9 @@ const setAuthForm = (type) => {
       break;
   }
   //after the setting the appropriate form to the DOM then switch to the Auth page using the switchPage wrapper function.
-  switchPage("toAuth");
 };
 
 const navHelper = event => {
-  console.info(event);
   if ( event.target.id === "register-btn" ) {
     setAuthForm("register");
     switchPage("toAuth");
@@ -628,84 +691,43 @@ const setNav = type => {
   switch (type) {
     case "signin":
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
-        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" onclick="switchPage('toLanding')" class="logo" style="float: left; padding: -20%;">
+          <div style="float:right; margin:1% 2%;">
+            <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+            <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+            <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+          </div>
+        </div>
       `;
       break;
     case "signout":
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <span style="float: left; color: darkblue;">${auth.emailLoggedIn}</span>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" style="float: left; padding: -20%;" onclick="switchPage('toLanding')" class="logo">
+          <div style="float:right; margin:1% 2%;">
+            <span style="color: white;">${auth.emailLoggedIn}</span>
+            <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+            <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
+          </div>
+        </div>
       `;
       break;
     default:
       nav.innerHTML = `
-        <a 
-          class="btn-floating waves-effect waves-light red" 
-          style="float: left; margin: 1%;"
-          onclick="switchPage('toLanding')" 
-        >
-          <i class="material-icons" id="favoriteBtn">favorite</i>
-        </a>
-        <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
-        <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
-        <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+        <div class="nav-wrapper">
+          <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" onclick="switchPage('toLanding')" class="logo" style="float: left; padding: -20%;">
+            <div style="float:right; margin:1% 2%;">
+              <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
+              <button id="login-btn" class="btn" onclick="navHelper(event)">Login</button>
+              <button id="register-btn" class="btn" onclick="navHelper(event)">Register</button>
+            </div>
+        </div>
       `;
       break;
   }
 };
 auth.isUserLoggedIn ? setNav("signout") : setNav("signin");
-
-
-//setAuth() function that updates the nav element in the DOM based on if there is a user already logged in or not.
-const setAuth = () => {
-  console.info("Whats going on here?", userStorage, auth);
-  //if there is someone an auth local storage instance array
-  if (auth) {
-    //if there is a userLoggedIn == true.
-    if ( auth.isUserLoggedIn ) {
-      //update the html in the nav element.
-        // nav.innerHTML = `
-        //   <p>Logged in as ${auth.emailLoggedIn}</p>
-        //   <button id="signout" onclick="handleLogout(event)" data-email=${auth.emailLoggedIn} class="btn">Log Out</button>
-        // `;
-        //set the auth form to "signout" using the setAuthForm()
-        // setAuthForm("signout");
-        //setNav function to "signout" //todo -->I think these functions are redundant and can be combined.
-        // setNav("signout");
-    } else {
-        // nav.innerHTML = `
-        //   <button class="btn">Log in</button>
-        // `;
-        // setAuthForm("signin");
-        // setNav("signin");
-    }
-
-  }
-  else {
-    // nav.innerHTML = `
-    //     <button class="btn">Log in</button>
-    //   `;
-      // setAuthForm("signin");
-      // setNav("signin");
-  }
-};
 
 //todo -->  work in progress. setting temporary loggedInUser to accessible variable
 let loggedInUser = {
@@ -724,8 +746,8 @@ loggedInUser = {
 
 //if there is someone logged in, checks onPageLoad
 auth.isUserLoggedIn ? 
-setAuth() && setFavorites() && switchPage("toDashboard") : //setAuth() and setFavorites() then switch to the dashboard page.
-setAuthForm("signin") && setFavorites(); //otherwise setAuthForm() and setFavorites();
+setAuthForm("signin") && setFavorites() && switchPage("toLanding") : //setAuth() and setFavorites() then switch to the dashboard page.
+setAuthForm("signin") && setFavorites() && switchPage("toLanding"); //otherwise setAuthForm() and setFavorites();
 
 //onPageLoad call the getMeals() function passing in a default search item.
 getMeals("Pasta");
@@ -761,8 +783,6 @@ const handleSubmit = (event) => {
       //set the userStorage array to localstorage using the handleLocalStorage wrapper function
       handleLocalStorage("set", "users", userStorage);
       updateUserStorage();
-       //if user is currently logged in, log them out before logging in the new person using setAuth().
-      setAuth();
       //assign the value of token to a new randomly generated string using the generateToken function
       token = generateToken();
       //set the logged in user in the auth local storage using the handleLocalStorage wrapper function
@@ -777,10 +797,9 @@ const handleSubmit = (event) => {
         email: user.email,
         token: token
       };
-      //update auth status with setAuth()
-      setAuth();
       setNav("signout");
       showUpdatedStorages();
+      setFavorites();
       //switch to the dashboard page using the switchPage() function
       switchPage("toDashboard");
       break;
@@ -788,7 +807,6 @@ const handleSubmit = (event) => {
       //if its "singnin"
     case "signin":
       //if there is data in the userStorage user local storage instance by checking its length.
-      console.info(userStorage.length, userStorage)
       if ( userStorage.length > 0 ) {
         //foreach item in the userStorage user local storage instance
         userStorage.forEach(userInDb => {
@@ -808,27 +826,24 @@ const handleSubmit = (event) => {
               email: user.email,
               token: token
             };
-            //update auth status with setAuth()
-            setAuth();
-            //update the data in the favorites section in the DOM //todo <-- Fix this.
-            // setFavorites();
+            setFavorites();
             setNav("signout");
             showUpdatedStorages();
             //switch to the dashboard page using the switchPage() function
             switchPage("toDashboard");
           } //if i dont even know what this is checking need to validate this
-          else { alert("Please enter a valid email and password."); }
+          // else { alert("Please enter a valid email and password."); }
         });
       } 
-      else {
-        //if no users stored in local storage match the user signing in 
-        alert("No users found with those credentials.");
-        //ask the user if they want to register instead 
-        if (confirm("Would you like to register instead?")) {
-          //update the auth form
-          setAuthForm("register");
-        }
-      }
+      // else {
+      //   //if no users stored in local storage match the user signing in 
+      //   alert("No users found with those credentials.");
+      //   //ask the user if they want to register instead 
+      //   if (confirm("Would you like to register instead?")) {
+      //     //update the auth form
+      //     setAuthForm("register");
+      //   }
+      // }
       break;
 
       //if its "signout"
@@ -842,9 +857,9 @@ const handleSubmit = (event) => {
       };
       updateAuth();
       //update the auth status and auth items in DOM.
-      setAuth();
       setNav("signin");
       showUpdatedStorages();
+      setFavorites();
       //switch to the landing page using the switchPage() function
       switchPage("toLanding");
       break;
