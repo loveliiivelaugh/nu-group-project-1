@@ -28,7 +28,7 @@ pasta, pizza and many more.
 
 ## Demo/Screenshot of TastyGen
 <img src="./assets/images/tastyGen_screenshot.png">
-
+<img src="./assets/images/tastyGen_screenshot2.png">
 
 
 ## Future Implementations
@@ -57,6 +57,6 @@ pasta, pizza and many more.
 
 ## Credits
 
-- Michael Woodward (GitHub and JS Master)
-- Karina Ayala (Project Manager, HTML, CSS)
-- Angel Flores (HTML, CSS) 
+- Michael Woodward
+- Karina Ayala
+- Angel Flores
