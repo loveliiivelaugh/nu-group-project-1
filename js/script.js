@@ -142,9 +142,9 @@ const setFavorites = () => {
   if (auth.isUserLoggedIn) {
     //set the favorites container
     groceryList.innerHTML = `
-      <ul id="tabs-swipe-demo" class="tabs">
-        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
-        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent row">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
       </ul>
       <h4>${auth.emailLoggedIn}'s Favorite Recipe's</h4>
       <ul>
@@ -152,7 +152,10 @@ const setFavorites = () => {
         favoriteRecipeStorage //filter it by checking if the email from the favorited item matched the email of the user logged in.
         .filter(favorite => favorite.userEmail === auth.emailLoggedIn)//after filtering map the results into a list item.
         .map((favorite, index) => `
-          <li>${favorite.recipeName && favorite.recipeName} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteFavoritesItem(event)">X</button></li>
+          <li class="row">
+            <p class="col s10">${favorite.recipeName && favorite.recipeName}</p> 
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteFavoritesItem(event)">x</a>
+          </li>
           `)
         .join("") : //removes the commas left over from joining the string from mapping an array.
         `<li>Add some items to your favorites list.</li>`
@@ -165,16 +168,19 @@ const setFavorites = () => {
     //if the above condition is not true then run this code block that just does the same thing but checks for 
     //a matching house email account.
     groceryList.innerHTML = `
-      <ul id="tabs-swipe-demo" class="tabs">
-        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
-        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent row">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
       </ul>
       <h4>Favorite Recipe's</h4>
       <ul>
       ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
         .map((favorite, index) => `
-          <li>${favorite.recipeName && favorite.recipeName} <button data-index="${index}" class="transparent" style="float: right;" onClick="deleteFavoritesItem(event)">X</button></li>
+          <li class="row">
+            <p class="col s10">${favorite.recipeName && favorite.recipeName}</p> 
+            <a data-index="${index}" class="btn-floating btn-small waves-effect waves-light red col s2" onClick="deleteFavoritesItem(event)">x</a>
+          </li>
           `)
         .join("") :
         `<li>Add some items to your favorites list.</li>`
@@ -201,36 +207,6 @@ const handleClearFavorites = () => {
   updateFavoriteRecipeStorage();
   //and then update the shoppingList()
   setFavorites();
-};
-
-
-//handleAddToFavorites() function handles adding a seleted item to the favorites list.
-const handleAddToFavorites = event => {
-  let recipeName = event.target.dataset.recipe;
-  let userEmail = auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com";
-  
-  favoriteRecipeStorage.forEach(favoriteRecipe => {
-    if (
-      favoriteRecipe.recipeName === recipeName && 
-      favoriteRecipe.userEmail === userEmail
-      ) {
-        alert("You already have that item in your favorites list.");
-        return;
-      } else {
-      //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
-      favoriteRecipeStorage.push({ 
-        //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
-        userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
-        recipeName: recipeName,
-      });
-      //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
-      handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
-      //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
-      updateFavoriteRecipeStorage();
-      //call the setFavorites() function to update the updated favorites in the DOM.
-      setFavorites();
-    }
-  });
 };
 
 //toggleGroceryList() handles toggling the grocery list and favorites tab
@@ -267,9 +243,9 @@ function handleClearShoppingList() {
 //function that sets the groceryList items in the DOM using the updated cart storage array.
 function setShoppingList() {
     groceryList.innerHTML = `
-      <ul id="tabs-swipe-demo" class="tabs">
-        <li class="tab col s3"><a href="#test-swipe-1">Groceries</a></li>
-        <li class="tab col s3"><a class="active" href="#test-swipe-2">Favorites</a></li>
+      <ul id="tabs-swipe-demo" class="tabs tabs-transparent" style="margin: 0 5%;">
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
+        <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
       </ul>
       <h2>Grocery List</h2>
       <ul>
@@ -285,6 +261,54 @@ function setShoppingList() {
       <button class="btn red white-text" onclick="handleClearShoppingList(event)">Clear List</button>
     `;
 }
+
+
+//handleAddToFavorites() function handles adding a seleted item to the favorites list.
+const handleAddToFavorites = event => {
+  let recipeName = event.target.dataset.recipe;
+  let userEmail = auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com";
+
+  console.info(event.target.dataset.recipe, favoriteRecipeStorage);
+  
+  favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage.forEach(favoriteRecipe => {
+    if (
+      favoriteRecipe.recipeName === recipeName && 
+      favoriteRecipe.userEmail === userEmail
+    ) {
+      alert("You already have that item in your favorites list.");
+      return;
+    } else {
+    //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+    favoriteRecipeStorage.push({ 
+      //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+      userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+      recipeName: recipeName,
+    });
+    //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+    handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+    //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+    // updateFavoriteRecipeStorage();
+    console.info(favoriteRecipeStorage);
+
+    //call the setFavorites() function to update the updated favorites in the DOM.
+    setFavorites();
+    }
+  }) :
+  //target the favoriteRecipeStorage and push in a new data object consisting of the userEmail, and the recipeName
+  favoriteRecipeStorage.push({ 
+    //userEmail has ternary condition = if there is a user logged in then return auth.emailLoggedIn otherwise return the house email. -> "default@test.com"
+    userEmail: auth.isUserLoggedIn ? auth.emailLoggedIn : "default@test.com",
+    recipeName: recipeName,
+  });
+  //call the handle local storage wrapper function passing in our action, storageName, and updated favoriteRecipeStorage.
+  handleLocalStorage("set", "favoriteRecipes", favoriteRecipeStorage);
+  //call the updateFavoriteRecipeStorage to update our favoriteStorage variable array.
+  // updateFavoriteRecipeStorage();
+  console.info(favoriteRecipeStorage);
+
+  //call the setFavorites() function to update the updated favorites in the DOM.
+  setFavorites();
+};
 
 //function to handle adding a selected item to the shopping list.
 function handleAddToShopping(event) {
@@ -376,7 +400,7 @@ var handleRecipeClick = event => {
         </div>
         <div className="col s6">
           <p>
-            <a class="btn-floating" onclick="handleServings(event)"><i class="material-icons" id="addBtn"  data-quantity="${quantity}">add</i></a>
+            <a class="btn-floating" onclick="handleServings(event)"><i class="material-icons" id="addBtn" data-quantity="${quantity}">add</i></a>
             <a class="btn-floating" onclick="handleServings(event)" ><i class="material-icons" id="removeBtn" data-quantity="${quantity}">remove</i></a>
           </p>
         </div>
