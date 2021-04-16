@@ -172,7 +172,7 @@ const setFavorites = () => {
         <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
         <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
       </ul>
-      <h4>Favorite Recipe's</h4>
+      <h4>default@test.com's Favorite Recipe's</h4>
       <ul>
       ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
@@ -262,7 +262,7 @@ function setShoppingList() {
     `;
 }
 
-
+//! This function needs to be rewritten...
 //handleAddToFavorites() function handles adding a seleted item to the favorites list.
 const handleAddToFavorites = event => {
   let recipeName = event.target.dataset.recipe;
@@ -391,11 +391,11 @@ var handleRecipeClick = event => {
         <div className="col s6">
           <p>
             <span class="material-icons">access_time</span>
-            <span>Prep time: ${recipe.total_time_minutes && recipe.total_time_minutes} minutes</span>
+            <span>Prep time: ${recipe.total_time_minutes ? recipe.total_time_minutes + " minutes" : ""}</span>
           </p>
           <p>
             <span class="material-icons">group</span>
-            <span id="servings">Servings: ${recipe.yields}</span>
+            <span id="servings">${recipe.yields}</span>
           </p>
         </div>
         <div className="col s6">
@@ -486,7 +486,7 @@ const setRecipeResults = data => {
   currentSearchResults = data ? data : recipeStorage[0];
   //set the innerHTML of the results element with the new data.
   results.innerHTML = `
-    <h3>Results list items</h3>
+    <h3>Recipes</h3>
     <ul>
     ${
       currentSearchResults &&
@@ -518,6 +518,7 @@ const setRecipeData = (data) => {
       <img id="meal-image" src=${recipe.thumbnail_url} alt=${recipe.name}/>
       <button onclick="handleAddToFavorites(event)" data-recipe="${recipe.name}" data-id="${1234}">Add to Favorites</button>
       <h3>Nutrition</h3>
+      ${recipe.nutrition ? `
       <table>
         <tr>
           <th>Calories</th>
@@ -527,7 +528,6 @@ const setRecipeData = (data) => {
           <th>Protein</th>
           <th>Sugar</th>
         </tr>
-        ${recipe.nutrition && `
           <tr>
           <td>${recipe.nutrition.calories ? recipe.nutrition.calories : ''}</td>
           <td>${recipe.nutrition.carbohydrates ? recipe.nutrition.carbohydrates : ''}</td>
@@ -536,7 +536,7 @@ const setRecipeData = (data) => {
           <td>${recipe.nutrition.protein ? recipe.nutrition.protein : ''}</td>
           <td>${recipe.nutrition.sugar ? recipe.nutrition.sugar : ''}</td>
         </tr>
-        `}
+        ` : "Sorry no nutrition data is available."}
       </table>
       <h3>Instructions</h3>
       <ul>
@@ -705,7 +705,7 @@ const setNav = type => {
         <div class="nav-wrapper">
           <img src="./assets/images/tasty_white_logo_resized.png" alt="app-logo" style="float: left; padding: -20%;" onclick="switchPage('toLanding')" class="logo">
           <div style="float:right; margin:1% 2%;">
-            <span style="color: darkblue;">${auth.emailLoggedIn}</span>
+            <span style="color: white;">${auth.emailLoggedIn}</span>
             <button id="" class="btn" onclick="switchPage('toDashboard')">Home</button>
             <button id="${type}" class="btn" onclick="handleLogout(event)">Logout</button>
           </div>
@@ -796,10 +796,9 @@ const handleSubmit = (event) => {
         email: user.email,
         token: token
       };
-      //update auth status with setAuth()
-      setAuth();
       setNav("signout");
       showUpdatedStorages();
+      setFavorites();
       //switch to the dashboard page using the switchPage() function
       switchPage("toDashboard");
       break;
@@ -826,25 +825,24 @@ const handleSubmit = (event) => {
               email: user.email,
               token: token
             };
-            //update the data in the favorites section in the DOM //todo <-- Fix this.
-            // setFavorites();
+            setFavorites();
             setNav("signout");
             showUpdatedStorages();
             //switch to the dashboard page using the switchPage() function
             switchPage("toDashboard");
           } //if i dont even know what this is checking need to validate this
-          else { alert("Please enter a valid email and password."); }
+          // else { alert("Please enter a valid email and password."); }
         });
       } 
-      else {
-        //if no users stored in local storage match the user signing in 
-        alert("No users found with those credentials.");
-        //ask the user if they want to register instead 
-        if (confirm("Would you like to register instead?")) {
-          //update the auth form
-          setAuthForm("register");
-        }
-      }
+      // else {
+      //   //if no users stored in local storage match the user signing in 
+      //   alert("No users found with those credentials.");
+      //   //ask the user if they want to register instead 
+      //   if (confirm("Would you like to register instead?")) {
+      //     //update the auth form
+      //     setAuthForm("register");
+      //   }
+      // }
       break;
 
       //if its "signout"
@@ -858,9 +856,9 @@ const handleSubmit = (event) => {
       };
       updateAuth();
       //update the auth status and auth items in DOM.
-      setAuth();
       setNav("signin");
       showUpdatedStorages();
+      setFavorites();
       //switch to the landing page using the switchPage() function
       switchPage("toLanding");
       break;
