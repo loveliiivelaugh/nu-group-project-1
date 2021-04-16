@@ -172,7 +172,7 @@ const setFavorites = () => {
         <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('groceries')">Groceries</button></li>
         <li class="tab col s6"><button class="btn" onclick="toggleGroceryList('favorites')">Favorites</button></li>
       </ul>
-      <h4>default@test.com's Favorite Recipe's</h4>
+      <h4>Favorite Recipe's</h4>
       <ul>
       ${favoriteRecipeStorage.length > 0 ? favoriteRecipeStorage
         .filter(favorite => favorite.userEmail === "default@test.com")
@@ -237,6 +237,7 @@ function handleClearShoppingList() {
   //using the handleLocalStorage() wrapper passing in the action, and nameOfStorage
   handleLocalStorage("remove", "cart");
   //and then update the shoppingList()
+  cart && updateCart();
   setShoppingList();
 }
 
@@ -439,7 +440,7 @@ var handleRecipeClick = event => {
           </div>
 
       <div class="card-reveal">
-        <span class="card-title grey-text text-darken-4">Card Title<i class="material-icons right">close</i></span>
+        <span class="card-title grey-text text-darken-4">${recipe.name}<i class="material-icons right">close</i></span>
         <h3>Nutrition</h3>
         <table>
           <tr>
@@ -506,7 +507,7 @@ const setRecipeResults = data => {
   `;
 };
 
-const setRecipeData = (data) => {
+const setRecipeData = data => {
   let index = 0;
   let results = [];
   if (data.results) { results = data.results; }
